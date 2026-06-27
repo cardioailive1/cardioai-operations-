@@ -1,140 +1,6 @@
 {
-  "betaSites": [
-    {
-      "id": "bs_cleveland",
-      "name": "Cleveland Clinic",
-      "location": "Cleveland, OH",
-      "status": "active",
-      "healthScore": 92,
-      "goLiveDate": "2026-03-15",
-      "activeUsers": 67,
-      "casesProcessed": 1247
-    },
-    {
-      "id": "bs_ucsf",
-      "name": "UCSF Medical Center",
-      "location": "San Francisco, CA",
-      "status": "active",
-      "healthScore": 89,
-      "goLiveDate": "2026-04-02",
-      "activeUsers": 54,
-      "casesProcessed": 982
-    },
-    {
-      "id": "bs_mayo",
-      "name": "Mayo Clinic",
-      "location": "Rochester, MN",
-      "status": "active",
-      "healthScore": 85,
-      "goLiveDate": "2026-04-20",
-      "activeUsers": 71,
-      "casesProcessed": 1456
-    },
-    {
-      "id": "bs_hopkins",
-      "name": "Johns Hopkins",
-      "location": "Baltimore, MD",
-      "status": "active",
-      "healthScore": 78,
-      "goLiveDate": "2026-05-05",
-      "activeUsers": 42,
-      "casesProcessed": 634
-    },
-    {
-      "id": "bs_massgen",
-      "name": "Mass General Hospital",
-      "location": "Boston, MA",
-      "status": "active",
-      "healthScore": 91,
-      "goLiveDate": "2026-05-18",
-      "activeUsers": 58,
-      "casesProcessed": 1089
-    },
-    {
-      "id": "bs_stanford",
-      "name": "Stanford Health Care",
-      "location": "Palo Alto, CA",
-      "status": "active",
-      "healthScore": 83,
-      "goLiveDate": "2026-06-03",
-      "activeUsers": 49,
-      "casesProcessed": 823
-    },
-    {
-      "id": "bs_cedars",
-      "name": "Cedars-Sinai",
-      "location": "Los Angeles, CA",
-      "status": "warning",
-      "healthScore": 72,
-      "goLiveDate": "2026-06-15",
-      "activeUsers": 31,
-      "casesProcessed": 412
-    },
-    {
-      "id": "bs_nyu",
-      "name": "NYU Langone",
-      "location": "New York, NY",
-      "status": "active",
-      "healthScore": 86,
-      "goLiveDate": "2026-07-01",
-      "activeUsers": 55,
-      "casesProcessed": 967
-    },
-    {
-      "id": "bs_mountsinai",
-      "name": "Mount Sinai",
-      "location": "New York, NY",
-      "status": "setup",
-      "healthScore": 65,
-      "goLiveDate": "2026-07-22",
-      "activeUsers": 18,
-      "casesProcessed": 189
-    },
-    {
-      "id": "bs_houston",
-      "name": "Houston Methodist",
-      "location": "Houston, TX",
-      "status": "setup",
-      "healthScore": 58,
-      "goLiveDate": "2026-08-05",
-      "activeUsers": 12,
-      "casesProcessed": 67
-    }
-  ],
-  "team": [
-    {
-      "id": "tm_1",
-      "name": "Sampson Tonywell",
-      "role": "Chief Operating Officer",
-      "department": "Executive",
-      "email": "tonywell@cardioailive.com",
-      "status": "active"
-    },
-    {
-      "id": "tm_2",
-      "name": "Galax",
-      "role": "Head of Sales",
-      "department": "Commercial",
-      "email": "galax@cardioailive.com",
-      "status": "active"
-    },
-    {
-      "id": "tm_3",
-      "name": "Dr. Nahar",
-      "role": "Clinical Advisor",
-      "department": "Clinical",
-      "email": "nahar@cardioailive.com",
-      "status": "active"
-    },
-    {
-      "id": "tm_4",
-      "name": "Avi",
-      "role": "Sales Representative",
-      "department": "Commercial",
-      "email": "avi@cardioailive.com",
-      "status": "active"
-    }
-  ],
+  "betaSites": [],
+  "team": [],
   "openPositions": [
     {
       "id": "op_1",
@@ -142,7 +8,10 @@
       "department": "Engineering",
       "location": "Remote",
       "type": "Full-time",
-      "status": "open"
+      "status": "open",
+      "level": "Senior",
+      "applications": 23,
+      "postedDate": "2026-06-01"
     },
     {
       "id": "op_2",
@@ -150,7 +19,10 @@
       "department": "Clinical",
       "location": "Hybrid",
       "type": "Full-time",
-      "status": "open"
+      "status": "open",
+      "level": "Mid-level",
+      "applications": 17,
+      "postedDate": "2026-06-05"
     },
     {
       "id": "op_3",
@@ -158,7 +30,10 @@
       "department": "Regulatory",
       "location": "Remote",
       "type": "Full-time",
-      "status": "open"
+      "status": "open",
+      "level": "Senior",
+      "applications": 12,
+      "postedDate": "2026-05-28"
     }
   ],
   "deals": [
@@ -167,7 +42,7 @@
       "account": "Kaiser Permanente",
       "stage": "qualification",
       "value": 480000,
-      "owner": "Galax",
+      "owner": "TBD",
       "closeDate": "2027-02-15",
       "contact": "VP Cardiology",
       "probability": 40,
@@ -178,7 +53,7 @@
       "account": "HCA Healthcare",
       "stage": "proposal",
       "value": 720000,
-      "owner": "Galax",
+      "owner": "TBD",
       "closeDate": "2027-01-30",
       "contact": "Chief Medical Officer",
       "probability": 60,
@@ -189,7 +64,7 @@
       "account": "Ascension Health",
       "stage": "negotiation",
       "value": 950000,
-      "owner": "Avi",
+      "owner": "TBD",
       "closeDate": "2027-03-10",
       "contact": "Director of Imaging",
       "probability": 75,
@@ -200,7 +75,7 @@
       "account": "Intermountain Health",
       "stage": "discovery",
       "value": 340000,
-      "owner": "Avi",
+      "owner": "TBD",
       "closeDate": "2027-04-01",
       "contact": "Innovation Lead",
       "probability": 20,
@@ -213,27 +88,39 @@
       "name": "Cleveland Clinic",
       "health": "healthy",
       "arr": 0,
-      "csm": "Dr. Nahar",
+      "csm": "TBD",
       "renewalDate": "2027-03-15",
-      "notes": "Lead beta site, high engagement"
+      "notes": "Lead beta site, high engagement",
+      "healthScore": 92,
+      "userAdoption": 88,
+      "casesPerMonth": 210,
+      "lastCheckin": "2026-06-18"
     },
     {
       "id": "cu_2",
       "name": "Mayo Clinic",
       "health": "healthy",
       "arr": 0,
-      "csm": "Dr. Nahar",
+      "csm": "TBD",
       "renewalDate": "2027-04-20",
-      "notes": "Strong adoption across cardiology"
+      "notes": "Strong adoption across cardiology",
+      "healthScore": 85,
+      "userAdoption": 81,
+      "casesPerMonth": 186,
+      "lastCheckin": "2026-06-20"
     },
     {
       "id": "cu_3",
       "name": "Cedars-Sinai",
       "health": "at-risk",
       "arr": 0,
-      "csm": "Dr. Nahar",
+      "csm": "TBD",
       "renewalDate": "2027-06-15",
-      "notes": "Low utilization, needs intervention"
+      "notes": "Low utilization, needs intervention",
+      "healthScore": 68,
+      "userAdoption": 54,
+      "casesPerMonth": 74,
+      "lastCheckin": "2026-06-10"
     }
   ],
   "earlyAdopters": [
@@ -242,21 +129,33 @@
       "name": "Cleveland Clinic",
       "tier": "Founding Partner",
       "joinedDate": "2026-03-15",
-      "status": "active"
+      "status": "active",
+      "champion": "TBD",
+      "engagement": "High",
+      "betaInterest": "Confirmed",
+      "referrals": 3
     },
     {
       "id": "ea_2",
       "name": "Mayo Clinic",
       "tier": "Founding Partner",
       "joinedDate": "2026-04-20",
-      "status": "active"
+      "status": "active",
+      "champion": "TBD",
+      "engagement": "High",
+      "betaInterest": "Confirmed",
+      "referrals": 2
     },
     {
       "id": "ea_3",
       "name": "Mass General Hospital",
       "tier": "Early Adopter",
       "joinedDate": "2026-05-18",
-      "status": "active"
+      "status": "active",
+      "champion": "TBD",
+      "engagement": "Medium",
+      "betaInterest": "Interested",
+      "referrals": 1
     }
   ],
   "preorders": [
@@ -283,14 +182,14 @@
       "partner": "Philips Healthcare",
       "type": "Technology",
       "status": "active",
-      "owner": "Sampson Tonywell"
+      "owner": "TBD"
     },
     {
       "id": "pt_2",
       "partner": "Epic Systems",
       "type": "Integration",
       "status": "in-discussion",
-      "owner": "Sampson Tonywell"
+      "owner": "TBD"
     }
   ],
   "supportTickets": [
@@ -300,7 +199,9 @@
       "site": "UCSF Medical Center",
       "priority": "high",
       "status": "open",
-      "assignee": "Engineering"
+      "assignee": "Engineering",
+      "created": "2026-06-22",
+      "sla": "On track"
     },
     {
       "id": "st_2",
@@ -308,7 +209,9 @@
       "site": "Mount Sinai",
       "priority": "medium",
       "status": "in-progress",
-      "assignee": "Clinical"
+      "assignee": "Clinical",
+      "created": "2026-06-24",
+      "sla": "On track"
     },
     {
       "id": "st_3",
@@ -316,7 +219,9 @@
       "site": "Cedars-Sinai",
       "priority": "low",
       "status": "open",
-      "assignee": "Engineering"
+      "assignee": "Engineering",
+      "created": "2026-06-25",
+      "sla": "On track"
     }
   ],
   "financials": {
@@ -364,5 +269,1334 @@
         "headcount": 0
       }
     ]
+  },
+  "strategicPartners": [
+    {
+      "id": "sp_1",
+      "partner": "Epic Systems",
+      "type": "Technology",
+      "strategicValue": "Native EHR integration, App Orchard listing",
+      "status": "Active"
+    },
+    {
+      "id": "sp_2",
+      "partner": "Philips Healthcare",
+      "type": "Medical Device OEM",
+      "strategicValue": "Echo machine integration, bundled sales",
+      "status": "Signed"
+    },
+    {
+      "id": "sp_3",
+      "partner": "Mayo Clinic",
+      "type": "Clinical Research",
+      "strategicValue": "Algorithm validation, KOL endorsement",
+      "status": "Multi-year"
+    },
+    {
+      "id": "sp_4",
+      "partner": "Premier Inc.",
+      "type": "GPO",
+      "strategicValue": "Access to 4,400 hospitals",
+      "status": "Negotiating"
+    }
+  ],
+  "fdaSubmissions": [
+    {
+      "id": "fda_1",
+      "submissionId": "PREP-001",
+      "type": "510(k) Traditional",
+      "productDevice": "Arrhythmia Detection",
+      "status": "Preparing",
+      "targetSubmission": "2025-06-01",
+      "targetDecision": "2025-09-01",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_2",
+      "submissionId": "PREP-002",
+      "type": "De Novo Request",
+      "productDevice": "CardioAI ECG Agent",
+      "status": "Preparing",
+      "targetSubmission": "2026-07-15",
+      "targetDecision": "2027-02-15",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_3",
+      "submissionId": "PREP-003",
+      "type": "De Novo Request",
+      "productDevice": "CardioAI Echo Agent",
+      "status": "Preparing",
+      "targetSubmission": "2026-08-01",
+      "targetDecision": "2027-03-01",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_4",
+      "submissionId": "PREP-004",
+      "type": "De Novo Request",
+      "productDevice": "CardioAI Lab Agent",
+      "status": "Preparing",
+      "targetSubmission": "2026-08-15",
+      "targetDecision": "2027-03-15",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_5",
+      "submissionId": "PREP-005",
+      "type": "De Novo Request",
+      "productDevice": "CardioAI Risk Agent",
+      "status": "Preparing",
+      "targetSubmission": "2026-09-01",
+      "targetDecision": "2027-04-01",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_6",
+      "submissionId": "PREP-006",
+      "type": "De Novo Request",
+      "productDevice": "CardioAI Diagnostic Agent",
+      "status": "Preparing",
+      "targetSubmission": "2026-09-15",
+      "targetDecision": "2027-04-15",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_7",
+      "submissionId": "PREP-007",
+      "type": "De Novo Request",
+      "productDevice": "CardioAI Treatment Agent",
+      "status": "Preparing",
+      "targetSubmission": "2026-10-01",
+      "targetDecision": "2027-05-01",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_8",
+      "submissionId": "PREP-008",
+      "type": "De Novo Request",
+      "productDevice": "CardioAI Prognosis Agent",
+      "status": "Preparing",
+      "targetSubmission": "2026-10-15",
+      "targetDecision": "2027-05-15",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_9",
+      "submissionId": "PREP-009",
+      "type": "De Novo Request",
+      "productDevice": "CVD Risk Calculator - AMI Predictor",
+      "status": "Preparing",
+      "targetSubmission": "2026-11-01",
+      "targetDecision": "2027-06-01",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_10",
+      "submissionId": "PREP-010",
+      "type": "De Novo Request",
+      "productDevice": "CVD Risk Calculator - Stroke Predictor",
+      "status": "Preparing",
+      "targetSubmission": "2026-11-15",
+      "targetDecision": "2027-06-15",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_11",
+      "submissionId": "PREP-011",
+      "type": "De Novo Request",
+      "productDevice": "CVD Risk Calculator - Heart Failure (HF)",
+      "status": "Preparing",
+      "targetSubmission": "2026-11-30",
+      "targetDecision": "2027-06-30",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_12",
+      "submissionId": "PREP-012",
+      "type": "De Novo Request",
+      "productDevice": "CVD Risk Calculator - SCD Predictor",
+      "status": "Preparing",
+      "targetSubmission": "2026-12-01",
+      "targetDecision": "2027-07-01",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_13",
+      "submissionId": "PREP-013",
+      "type": "De Novo Request",
+      "productDevice": "CVD Risk Calculator - AFib Predictor",
+      "status": "Preparing",
+      "targetSubmission": "2026-12-15",
+      "targetDecision": "2027-07-15",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_14",
+      "submissionId": "PREP-014",
+      "type": "De Novo Request",
+      "productDevice": "IoMT Remote Patient Monitoring Platform",
+      "status": "Preparing",
+      "targetSubmission": "2027-04-15",
+      "targetDecision": "2027-11-15",
+      "lead": "TBD"
+    },
+    {
+      "id": "fda_15",
+      "submissionId": "PREP-015",
+      "type": "510(k) Special",
+      "productDevice": "PACS/DICOM Integration Platform",
+      "status": "Preparing",
+      "targetSubmission": "2027-06-30",
+      "targetDecision": "2027-09-30",
+      "lead": "TBD"
+    }
+  ],
+  "intlRegulatory": [
+    {
+      "id": "intl_1",
+      "countryRegion": "\ud83c\uddea\ud83c\uddfa European Union",
+      "regulatoryBody": "Notified Body (BSI)",
+      "status": "Planning",
+      "certification": "CE Mark (MDR)",
+      "targetSubmission": "Q1 2028"
+    },
+    {
+      "id": "intl_2",
+      "countryRegion": "\ud83c\uddec\ud83c\udde7 United Kingdom",
+      "regulatoryBody": "MHRA",
+      "status": "Planning",
+      "certification": "UKCA Mark",
+      "targetSubmission": "Q2 2028"
+    },
+    {
+      "id": "intl_3",
+      "countryRegion": "\ud83c\udde8\ud83c\udde6 Canada",
+      "regulatoryBody": "Health Canada",
+      "status": "Planning",
+      "certification": "MDEL Application",
+      "targetSubmission": "Q2 2028"
+    },
+    {
+      "id": "intl_4",
+      "countryRegion": "\ud83c\udde6\ud83c\uddfa Australia",
+      "regulatoryBody": "TGA",
+      "status": "Planning",
+      "certification": "ARTG Inclusion",
+      "targetSubmission": "Q3 2028"
+    },
+    {
+      "id": "intl_5",
+      "countryRegion": "\ud83c\uddef\ud83c\uddf5 Japan",
+      "regulatoryBody": "PMDA",
+      "status": "Planning",
+      "certification": "Shonin Application",
+      "targetSubmission": "Q4 2028"
+    }
+  ],
+  "clinicalStudies": [
+    {
+      "id": "cs_1",
+      "studyId": "CARDIO-AI-001",
+      "title": "AI-ECG for STEMI Detection",
+      "phase": "Pivotal",
+      "status": "Active",
+      "sites": "12",
+      "enrolled": "847",
+      "target": "1,000",
+      "primaryCompletion": "2025-06-30"
+    },
+    {
+      "id": "cs_2",
+      "studyId": "CARDIO-AI-002",
+      "title": "Risk Stratification Validation",
+      "phase": "Validation",
+      "status": "Recruiting",
+      "sites": "8",
+      "enrolled": "423",
+      "target": "750",
+      "primaryCompletion": "2025-09-15"
+    },
+    {
+      "id": "cs_3",
+      "studyId": "CARDIO-AI-003",
+      "title": "AFib Detection Accuracy",
+      "phase": "Feasibility",
+      "status": "Active",
+      "sites": "4",
+      "enrolled": "289",
+      "target": "300",
+      "primaryCompletion": "2025-04-30"
+    },
+    {
+      "id": "cs_4",
+      "studyId": "CARDIO-AI-004",
+      "title": "Echocardiography AI Analysis",
+      "phase": "Pivotal",
+      "status": "Recruiting",
+      "sites": "10",
+      "enrolled": "178",
+      "target": "800",
+      "primaryCompletion": "2025-12-31"
+    },
+    {
+      "id": "cs_5",
+      "studyId": "CARDIO-AI-005",
+      "title": "Real-World Evidence Study",
+      "phase": "Post-Market",
+      "status": "Active",
+      "sites": "15",
+      "enrolled": "110",
+      "target": "5,000",
+      "primaryCompletion": "2026-12-31"
+    }
+  ],
+  "safetyEvents": [
+    {
+      "id": "sae_1",
+      "saeId": "No serious adverse events reported"
+    }
+  ],
+  "cloudInfra": [
+    {
+      "id": "ci_1",
+      "service": "EC2 Compute",
+      "region": "us-east-1",
+      "instances": "12 instances",
+      "status": "Running",
+      "monthlyCost": "$4,280/mo"
+    },
+    {
+      "id": "ci_2",
+      "service": "RDS Database",
+      "region": "us-east-1",
+      "instances": "3 clusters",
+      "status": "Running",
+      "monthlyCost": "$2,890/mo"
+    },
+    {
+      "id": "ci_3",
+      "service": "S3 Storage",
+      "region": "Multi-region",
+      "instances": "8.4 TB",
+      "status": "Active",
+      "monthlyCost": "$1,240/mo"
+    },
+    {
+      "id": "ci_4",
+      "service": "Lambda Functions",
+      "region": "us-east-1",
+      "instances": "47 functions",
+      "status": "Active",
+      "monthlyCost": "$680/mo"
+    },
+    {
+      "id": "ci_5",
+      "service": "CloudFront CDN",
+      "region": "Global",
+      "instances": "3 distributions",
+      "status": "Active",
+      "monthlyCost": "$920/mo"
+    },
+    {
+      "id": "ci_6",
+      "service": "EKS Kubernetes",
+      "region": "us-east-1",
+      "instances": "2 clusters",
+      "status": "Running",
+      "monthlyCost": "$1,560/mo"
+    }
+  ],
+  "appStack": [
+    {
+      "id": "asx_1",
+      "service": "AI Inference API",
+      "version": "v4.2.1",
+      "instances": "8",
+      "status": "Healthy",
+      "cpu": "67%",
+      "memory": "4.2 GB"
+    },
+    {
+      "id": "asx_2",
+      "service": "Risk Calculator Service",
+      "version": "v3.8.2",
+      "instances": "6",
+      "status": "Healthy",
+      "cpu": "54%",
+      "memory": "2.8 GB"
+    },
+    {
+      "id": "asx_3",
+      "service": "EHR Integration Gateway",
+      "version": "v2.9.4",
+      "instances": "4",
+      "status": "Healthy",
+      "cpu": "71%",
+      "memory": "3.6 GB"
+    },
+    {
+      "id": "asx_4",
+      "service": "DICOM/PACS Service",
+      "version": "v5.1.0",
+      "instances": "4",
+      "status": "Healthy",
+      "cpu": "62%",
+      "memory": "5.1 GB"
+    },
+    {
+      "id": "asx_5",
+      "service": "IoMT Data Processor",
+      "version": "v3.2.1",
+      "instances": "3",
+      "status": "Healthy",
+      "cpu": "48%",
+      "memory": "2.1 GB"
+    },
+    {
+      "id": "asx_6",
+      "service": "Authentication Service",
+      "version": "v2.5.3",
+      "instances": "4",
+      "status": "Healthy",
+      "cpu": "32%",
+      "memory": "1.8 GB"
+    },
+    {
+      "id": "asx_7",
+      "service": "Analytics Engine",
+      "version": "v4.0.8",
+      "instances": "5",
+      "status": "Healthy",
+      "cpu": "76%",
+      "memory": "6.4 GB"
+    }
+  ],
+  "itDatabases": [
+    {
+      "id": "idb_1",
+      "database": "patient_records",
+      "type": "PostgreSQL 14.5",
+      "size": "2.8 TB",
+      "status": "Active",
+      "replication": "3 replicas",
+      "lastBackup": "30 min ago"
+    },
+    {
+      "id": "idb_2",
+      "database": "ai_models",
+      "type": "PostgreSQL 14.5",
+      "size": "1.2 TB",
+      "status": "Active",
+      "replication": "2 replicas",
+      "lastBackup": "45 min ago"
+    },
+    {
+      "id": "idb_3",
+      "database": "analytics_data",
+      "type": "MongoDB 6.0",
+      "size": "890 GB",
+      "status": "Active",
+      "replication": "3 replicas",
+      "lastBackup": "1 hour ago"
+    },
+    {
+      "id": "idb_4",
+      "database": "cache_redis",
+      "type": "Redis 7.0",
+      "size": "124 GB",
+      "status": "Active",
+      "replication": "Clustered",
+      "lastBackup": "Real-time"
+    }
+  ],
+  "monitoringAlerts": [
+    {
+      "id": "ma_1",
+      "alertType": "CPU Usage High",
+      "threshold": "> 85%",
+      "status": "Active",
+      "lastTriggered": "Never",
+      "recipients": "IT Team, COO"
+    },
+    {
+      "id": "ma_2",
+      "alertType": "Memory Usage Critical",
+      "threshold": "> 90%",
+      "status": "Active",
+      "lastTriggered": "Never",
+      "recipients": "IT Team, COO"
+    },
+    {
+      "id": "ma_3",
+      "alertType": "API Response Slow",
+      "threshold": "> 500ms",
+      "status": "Active",
+      "lastTriggered": "3 days ago",
+      "recipients": "IT Team"
+    },
+    {
+      "id": "ma_4",
+      "alertType": "Database Connection Failed",
+      "threshold": "Any failure",
+      "status": "Active",
+      "lastTriggered": "Never",
+      "recipients": "IT Team, Oncall"
+    },
+    {
+      "id": "ma_5",
+      "alertType": "Disk Space Low",
+      "threshold": "> 80%",
+      "status": "Active",
+      "lastTriggered": "1 week ago",
+      "recipients": "IT Team"
+    },
+    {
+      "id": "ma_6",
+      "alertType": "SSL Certificate Expiry",
+      "threshold": "30 days",
+      "status": "Active",
+      "lastTriggered": "Never",
+      "recipients": "IT Team, Security"
+    }
+  ],
+  "itAssets": [
+    {
+      "id": "ast_1",
+      "assetId": "MBP-0234",
+      "deviceType": "MacBook Pro",
+      "model": "M3 Max 16\" 2024",
+      "assignedTo": "John Doe (COO)",
+      "status": "Active",
+      "lastCheckIn": "2 min ago",
+      "compliance": "\u2713 Pass"
+    },
+    {
+      "id": "ast_2",
+      "assetId": "MBP-0187",
+      "deviceType": "MacBook Pro",
+      "model": "M2 Pro 14\" 2023",
+      "assignedTo": "Sarah Miller (VP Ops)",
+      "status": "Active",
+      "lastCheckIn": "5 min ago",
+      "compliance": "\u2713 Pass"
+    },
+    {
+      "id": "ast_3",
+      "assetId": "MBA-0312",
+      "deviceType": "MacBook Air",
+      "model": "M2 13\" 2024",
+      "assignedTo": "Emily Zhang (Designer)",
+      "status": "Active",
+      "lastCheckIn": "12 min ago",
+      "compliance": "\u2713 Pass"
+    },
+    {
+      "id": "ast_4",
+      "assetId": "DEL-0445",
+      "deviceType": "Dell Laptop",
+      "model": "XPS 15 9530",
+      "assignedTo": "Kevin Chen (IT Director)",
+      "status": "Active",
+      "lastCheckIn": "8 min ago",
+      "compliance": "\u2713 Pass"
+    },
+    {
+      "id": "ast_5",
+      "assetId": "LEN-0289",
+      "deviceType": "Lenovo Laptop",
+      "model": "ThinkPad X1 Carbon",
+      "assignedTo": "Jessica Lee (Compliance)",
+      "status": "Active",
+      "lastCheckIn": "15 min ago",
+      "compliance": "\u2713 Pass"
+    },
+    {
+      "id": "ast_6",
+      "assetId": "MBP-0156",
+      "deviceType": "MacBook Pro",
+      "model": "M2 Pro 16\" 2023",
+      "assignedTo": "Michael Rodriguez (Dev)",
+      "status": "Active",
+      "lastCheckIn": "20 min ago",
+      "compliance": "\u2713 Pass"
+    },
+    {
+      "id": "ast_7",
+      "assetId": "MBA-0298",
+      "deviceType": "MacBook Air",
+      "model": "M1 13\" 2022",
+      "assignedTo": "Amanda Foster (Marketing)",
+      "status": "Update Pending",
+      "lastCheckIn": "45 min ago",
+      "compliance": "\u26a0 Update Required"
+    },
+    {
+      "id": "ast_8",
+      "assetId": "DEL-0512",
+      "deviceType": "Dell Laptop",
+      "model": "Latitude 7440",
+      "assignedTo": "David Kim (Sales)",
+      "status": "Setup",
+      "lastCheckIn": "New device",
+      "compliance": "\u23f3 Provisioning"
+    }
+  ],
+  "securityPolicies": [
+    {
+      "id": "pol_1",
+      "securityPolicy": "Full Disk Encryption",
+      "requirement": "FileVault (Mac) / BitLocker (Win)",
+      "complianceRate": "100%",
+      "nonCompliant": "0",
+      "status": "Enforced"
+    },
+    {
+      "id": "pol_2",
+      "securityPolicy": "Antivirus/EDR",
+      "requirement": "CrowdStrike Falcon installed & active",
+      "complianceRate": "100%",
+      "nonCompliant": "0",
+      "status": "Enforced"
+    },
+    {
+      "id": "pol_3",
+      "securityPolicy": "OS Updates",
+      "requirement": "Latest security patches installed",
+      "complianceRate": "98.9%",
+      "nonCompliant": "1",
+      "status": "Monitored"
+    },
+    {
+      "id": "pol_4",
+      "securityPolicy": "Firewall Enabled",
+      "requirement": "Host firewall active & configured",
+      "complianceRate": "100%",
+      "nonCompliant": "0",
+      "status": "Enforced"
+    },
+    {
+      "id": "pol_5",
+      "securityPolicy": "Screen Lock",
+      "requirement": "Auto-lock after 5 min inactivity",
+      "complianceRate": "100%",
+      "nonCompliant": "0",
+      "status": "Enforced"
+    },
+    {
+      "id": "pol_6",
+      "securityPolicy": "VPN Required",
+      "requirement": "Corporate VPN for remote access",
+      "complianceRate": "100%",
+      "nonCompliant": "0",
+      "status": "Enforced"
+    },
+    {
+      "id": "pol_7",
+      "securityPolicy": "MDM Enrollment",
+      "requirement": "Jamf Pro (Mac) / Intune (Win)",
+      "complianceRate": "100%",
+      "nonCompliant": "0",
+      "status": "Enforced"
+    },
+    {
+      "id": "pol_8",
+      "securityPolicy": "Password Policy",
+      "requirement": "Complex passwords, 12+ chars",
+      "complianceRate": "100%",
+      "nonCompliant": "0",
+      "status": "Enforced"
+    }
+  ],
+  "certifications": [
+    {
+      "id": "cert_1",
+      "certification": "HIPAA",
+      "status": "Certified",
+      "lastAudit": "Sep 15, 2026",
+      "nextAudit": "Sep 15, 2027",
+      "auditor": "Healthcare Compliance Inc.",
+      "score": "100%"
+    },
+    {
+      "id": "cert_2",
+      "certification": "SOC 2 Type II",
+      "status": "In Progress",
+      "lastAudit": "-",
+      "nextAudit": "Q2 2026 (Target)",
+      "auditor": "Deloitte",
+      "score": "85%"
+    },
+    {
+      "id": "cert_3",
+      "certification": "ISO 27001",
+      "status": "In Progress",
+      "lastAudit": "-",
+      "nextAudit": "Q3 2026 (Target)",
+      "auditor": "BSI Group",
+      "score": "78%"
+    },
+    {
+      "id": "cert_4",
+      "certification": "FDA 21 CFR Part 11",
+      "status": "In Progress",
+      "lastAudit": "-",
+      "nextAudit": "Dec 2026",
+      "auditor": "FDA Consultants LLC",
+      "score": "85%"
+    },
+    {
+      "id": "cert_5",
+      "certification": "GDPR",
+      "status": "Compliant",
+      "lastAudit": "Jun 5, 2026",
+      "nextAudit": "Jun 5, 2027",
+      "auditor": "Privacy Shield Ltd.",
+      "score": "97%"
+    }
+  ],
+  "trainingPrograms": [
+    {
+      "id": "tp_1",
+      "program": "Cardio AI Platform Fundamentals",
+      "type": "Core",
+      "duration": "4 hours",
+      "enrolled": "347",
+      "completed": "327",
+      "passRate": "96%"
+    },
+    {
+      "id": "tp_2",
+      "program": "Risk Calculator Interpretation",
+      "type": "Advanced",
+      "duration": "3 hours",
+      "enrolled": "289",
+      "completed": "271",
+      "passRate": "98%"
+    },
+    {
+      "id": "tp_3",
+      "program": "DICOM/PACS Integration",
+      "type": "Technical",
+      "duration": "2.5 hours",
+      "enrolled": "156",
+      "completed": "142",
+      "passRate": "95%"
+    },
+    {
+      "id": "tp_4",
+      "program": "Clinical Workflow Optimization",
+      "type": "Advanced",
+      "duration": "3.5 hours",
+      "enrolled": "234",
+      "completed": "218",
+      "passRate": "97%"
+    },
+    {
+      "id": "tp_5",
+      "program": "IoMT-RPM Integration",
+      "type": "Specialized",
+      "duration": "2 hours",
+      "enrolled": "98",
+      "completed": "87",
+      "passRate": "92%"
+    },
+    {
+      "id": "tp_6",
+      "program": "AHA Guidelines Compliance",
+      "type": "Certification",
+      "duration": "5 hours",
+      "enrolled": "347",
+      "completed": "339",
+      "passRate": "99%"
+    }
+  ],
+  "strategicInitiatives": [
+    {
+      "id": "si_1",
+      "initiative": "Beta Program Completion",
+      "owner": "TBD",
+      "status": "On Track",
+      "progress": "80%",
+      "targetDate": "Q4 2026",
+      "impact": "High"
+    },
+    {
+      "id": "si_2",
+      "initiative": "Commercial Launch Preparation",
+      "owner": "TBD",
+      "status": "In Progress",
+      "progress": "65%",
+      "targetDate": "Q1 2027",
+      "impact": "High"
+    },
+    {
+      "id": "si_3",
+      "initiative": "SOPs & Documentation",
+      "owner": "TBD",
+      "status": "On Track",
+      "progress": "92%",
+      "targetDate": "Dec 2026",
+      "impact": "Medium"
+    },
+    {
+      "id": "si_4",
+      "initiative": "Team Expansion Plan",
+      "owner": "TBD",
+      "status": "On Track",
+      "progress": "70%",
+      "targetDate": "Q1 2027",
+      "impact": "High"
+    },
+    {
+      "id": "si_5",
+      "initiative": "Process Automation",
+      "owner": "TBD",
+      "status": "In Progress",
+      "progress": "55%",
+      "targetDate": "Q2 2027",
+      "impact": "Medium"
+    }
+  ],
+  "betaTestingSites": [
+    {
+      "id": "bt_1",
+      "site": "Cleveland Clinic",
+      "patients": "127",
+      "tests": "342",
+      "uptime": "98.2%",
+      "status": "Online"
+    },
+    {
+      "id": "bt_2",
+      "site": "Mayo Clinic",
+      "patients": "89",
+      "tests": "267",
+      "uptime": "97.8%",
+      "status": "Online"
+    },
+    {
+      "id": "bt_3",
+      "site": "Johns Hopkins",
+      "patients": "76",
+      "tests": "198",
+      "uptime": "96.5%",
+      "status": "Online"
+    },
+    {
+      "id": "bt_4",
+      "site": "Mass General",
+      "patients": "93",
+      "tests": "312",
+      "uptime": "99.1%",
+      "status": "Online"
+    },
+    {
+      "id": "bt_5",
+      "site": "UCSF Medical",
+      "patients": "64",
+      "tests": "156",
+      "uptime": "94.7%",
+      "status": "Warning"
+    },
+    {
+      "id": "bt_6",
+      "site": "Cedars-Sinai",
+      "patients": "71",
+      "tests": "189",
+      "uptime": "95.3%",
+      "status": "Online"
+    },
+    {
+      "id": "bt_7",
+      "site": "NYU Langone",
+      "patients": "58",
+      "tests": "176",
+      "uptime": "97.2%",
+      "status": "Online"
+    },
+    {
+      "id": "bt_8",
+      "site": "Stanford Health",
+      "patients": "82",
+      "tests": "234",
+      "uptime": "98.9%",
+      "status": "Online"
+    },
+    {
+      "id": "bt_9",
+      "site": "Northwestern Med",
+      "patients": "52",
+      "tests": "143",
+      "uptime": "93.8%",
+      "status": "Warning"
+    },
+    {
+      "id": "bt_10",
+      "site": "Duke University",
+      "patients": "122",
+      "tests": "294",
+      "uptime": "99.4%",
+      "status": "Online"
+    }
+  ],
+  "implementations": [
+    {
+      "id": "bus1_1",
+      "organization": "Massachusetts General Hospital",
+      "contractValue": "$420K",
+      "term": "3 years",
+      "signedDate": "Dec 15, 2025",
+      "goLiveTarget": "Feb 2027",
+      "status": "Confirmed"
+    },
+    {
+      "id": "bus1_2",
+      "organization": "University of Michigan Health",
+      "contractValue": "$310K",
+      "term": "3 years",
+      "signedDate": "Jan 8, 2026",
+      "goLiveTarget": "Mar 2027",
+      "status": "Confirmed"
+    },
+    {
+      "id": "bus1_3",
+      "organization": "Northwestern Medicine",
+      "contractValue": "$280K",
+      "term": "2 years",
+      "signedDate": "Jan 12, 2026",
+      "goLiveTarget": "Mar 2027",
+      "status": "Confirmed"
+    },
+    {
+      "id": "bus1_4",
+      "organization": "Penn Medicine",
+      "contractValue": "$350K",
+      "term": "3 years",
+      "signedDate": "Jan 18, 2026",
+      "goLiveTarget": "Apr 2027",
+      "status": "Legal Review"
+    }
+  ],
+  "leadSources": [
+    {
+      "id": "bus2_1",
+      "source": "Conference & Events",
+      "leadsGenerated": "42",
+      "conversionRate": "38%",
+      "costPerLead": "$1,240",
+      "pipelineValue": "$2.8M",
+      "roi": "54x"
+    },
+    {
+      "id": "bus2_2",
+      "source": "Direct Outreach",
+      "leadsGenerated": "56",
+      "conversionRate": "32%",
+      "costPerLead": "$890",
+      "pipelineValue": "$3.1M",
+      "roi": "62x"
+    },
+    {
+      "id": "bus2_3",
+      "source": "Referrals",
+      "leadsGenerated": "28",
+      "conversionRate": "45%",
+      "costPerLead": "$420",
+      "pipelineValue": "$1.8M",
+      "roi": "153x"
+    },
+    {
+      "id": "bus2_4",
+      "source": "Website Inquiries",
+      "leadsGenerated": "21",
+      "conversionRate": "18%",
+      "costPerLead": "$320",
+      "pipelineValue": "$680K",
+      "roi": "101x"
+    }
+  ],
+  "participants": [
+    {
+      "id": "ear1_1",
+      "organization": "Johns Hopkins Hospital",
+      "champion": "TBD",
+      "enrollmentDate": "Dec 2, 2025",
+      "engagement": "High (98%)",
+      "betaInterest": "\u2713 Confirmed",
+      "referrals": "12",
+      "status": "Active"
+    },
+    {
+      "id": "ear1_2",
+      "organization": "Mayo Clinic Arizona",
+      "champion": "TBD",
+      "enrollmentDate": "Nov 15, 2025",
+      "engagement": "High (95%)",
+      "betaInterest": "Considering",
+      "referrals": "8",
+      "status": "Active"
+    },
+    {
+      "id": "ear1_3",
+      "organization": "Mount Sinai Health System",
+      "champion": "TBD",
+      "enrollmentDate": "Oct 20, 2025",
+      "engagement": "Medium (78%)",
+      "betaInterest": "\u2713 Confirmed",
+      "referrals": "5",
+      "status": "Active"
+    },
+    {
+      "id": "ear1_4",
+      "organization": "Duke University Hospital",
+      "champion": "TBD",
+      "enrollmentDate": "Sep 18, 2025",
+      "engagement": "High (92%)",
+      "betaInterest": "Evaluating",
+      "referrals": "14",
+      "status": "Active"
+    },
+    {
+      "id": "ear1_5",
+      "organization": "Brigham and Women's Hospital",
+      "champion": "TBD",
+      "enrollmentDate": "Jan 10, 2026",
+      "engagement": "High (88%)",
+      "betaInterest": "\u2713 Confirmed",
+      "referrals": "6",
+      "status": "Active"
+    },
+    {
+      "id": "ear1_6",
+      "organization": "Emory Healthcare",
+      "champion": "TBD",
+      "enrollmentDate": "Dec 28, 2025",
+      "engagement": "Medium (72%)",
+      "betaInterest": "Interested",
+      "referrals": "3",
+      "status": "Active"
+    }
+  ],
+  "programBenefits": [
+    {
+      "id": "ear2_1",
+      "benefit": "Preferential Pricing",
+      "description": "Early adopter discount on first year",
+      "value": "20% off",
+      "eligibility": "All participants",
+      "status": "Active"
+    },
+    {
+      "id": "ear2_2",
+      "benefit": "Beta Access",
+      "description": "Priority access to beta program Q2-Q4 2026",
+      "value": "Exclusive",
+      "eligibility": "High engagement",
+      "status": "Active"
+    },
+    {
+      "id": "ear2_3",
+      "benefit": "Product Influence",
+      "description": "Direct input on roadmap and features",
+      "value": "Advisory board seat",
+      "eligibility": "All participants",
+      "status": "Active"
+    },
+    {
+      "id": "ear2_4",
+      "benefit": "Priority Support",
+      "description": "Dedicated implementation team",
+      "value": "$35K value",
+      "eligibility": "Beta converts",
+      "status": "Active"
+    },
+    {
+      "id": "ear2_5",
+      "benefit": "Co-Marketing",
+      "description": "Joint case studies, press releases, events",
+      "value": "Brand exposure",
+      "eligibility": "Beta participants",
+      "status": "Active"
+    },
+    {
+      "id": "ear2_6",
+      "benefit": "Referral Bonuses",
+      "description": "Additional discount for qualified referrals",
+      "value": "5% per referral",
+      "eligibility": "Active referrers",
+      "status": "Active"
+    }
+  ],
+  "engagementActivities": [
+    {
+      "id": "ear3_1",
+      "activity": "Advisory Board Q1 Meeting",
+      "type": "Virtual Meeting",
+      "date": "Feb 5, 2026",
+      "participants": "18 registered",
+      "status": "Upcoming"
+    },
+    {
+      "id": "ear3_2",
+      "activity": "Product Roadmap Review",
+      "type": "Webinar",
+      "date": "Jan 28, 2026",
+      "participants": "24 registered",
+      "status": "Upcoming"
+    },
+    {
+      "id": "ear3_3",
+      "activity": "Clinical Validation Workshop",
+      "type": "Workshop",
+      "date": "Jan 15, 2026",
+      "participants": "12 attended",
+      "status": "Completed"
+    },
+    {
+      "id": "ear3_4",
+      "activity": "Early Adopter Networking Event",
+      "type": "In-Person",
+      "date": "Mar 12, 2026",
+      "participants": "0 registered",
+      "status": "Planning"
+    }
+  ],
+  "programMetrics": [
+    {
+      "id": "ear4_1",
+      "metric": "Active Participants",
+      "current": "34",
+      "target": "30",
+      "status": "+13%",
+      "trend": "\u2191"
+    },
+    {
+      "id": "ear4_2",
+      "metric": "Engagement Rate",
+      "current": "94%",
+      "target": "85%",
+      "status": "+11%",
+      "trend": "\u2191"
+    },
+    {
+      "id": "ear4_3",
+      "metric": "Beta Conversion",
+      "current": "24%",
+      "target": "20%",
+      "status": "+20%",
+      "trend": "\u2191"
+    },
+    {
+      "id": "ear4_4",
+      "metric": "Referral Rate",
+      "current": "1.4 per adopter",
+      "target": "1.0",
+      "status": "+40%",
+      "trend": "\u2191"
+    },
+    {
+      "id": "ear4_5",
+      "metric": "Time to Beta Decision",
+      "current": "87 days",
+      "target": "90 days",
+      "status": "-3%",
+      "trend": "\u2193"
+    },
+    {
+      "id": "ear4_6",
+      "metric": "Program Satisfaction",
+      "current": "4.7/5",
+      "target": "4.5/5",
+      "status": "+4%",
+      "trend": "\u2191"
+    }
+  ],
+  "supportTeam": [],
+  "itTickets": [
+    {
+      "id": "its1_1",
+      "ticketId": "#IT-2847",
+      "type": "Infrastructure",
+      "issue": "Database performance optimization needed",
+      "priority": "High",
+      "status": "In Progress",
+      "assignedTo": "Kevin Chen",
+      "created": "3 hours ago"
+    },
+    {
+      "id": "its1_2",
+      "ticketId": "#IT-2846",
+      "type": "Application",
+      "issue": "API gateway intermittent timeouts",
+      "priority": "High",
+      "status": "In Progress",
+      "assignedTo": "Kevin Chen",
+      "created": "1 day ago"
+    },
+    {
+      "id": "its1_3",
+      "ticketId": "#IT-2845",
+      "type": "Access",
+      "issue": "New user VPN access setup",
+      "priority": "Medium",
+      "status": "Pending",
+      "assignedTo": "Unassigned",
+      "created": "2 days ago"
+    },
+    {
+      "id": "its1_4",
+      "ticketId": "#IT-2844",
+      "type": "Security",
+      "issue": "SSL certificate renewal - 2 domains",
+      "priority": "Medium",
+      "status": "Scheduled",
+      "assignedTo": "Security Team",
+      "created": "1 week ago"
+    }
+  ],
+  "itEscalations": [
+    {
+      "id": "#2847",
+      "customer": "Cleveland Clinic",
+      "issue": "EHR Integration timeout errors",
+      "priority": "Critical",
+      "status": "In Progress",
+      "created": "2 hours ago"
+    },
+    {
+      "id": "#2846",
+      "customer": "UCSF Medical Center",
+      "issue": "Report generation slow performance",
+      "priority": "High",
+      "status": "In Progress",
+      "created": "5 hours ago"
+    },
+    {
+      "id": "#2845",
+      "customer": "Mayo Clinic",
+      "issue": "User training request",
+      "priority": "Medium",
+      "status": "Pending",
+      "created": "1 day ago"
+    },
+    {
+      "id": "#2844",
+      "customer": "Johns Hopkins",
+      "issue": "API authentication issues",
+      "priority": "Critical",
+      "status": "In Progress",
+      "created": "3 hours ago"
+    },
+    {
+      "id": "#2843",
+      "customer": "Mass General",
+      "issue": "Dashboard customization request",
+      "priority": "Medium",
+      "status": "In Progress",
+      "created": "1 day ago"
+    },
+    {
+      "id": "#2842",
+      "customer": "Cedars-Sinai",
+      "issue": "DICOM imaging not loading",
+      "priority": "Critical",
+      "status": "In Progress",
+      "created": "6 hours ago"
+    },
+    {
+      "id": "#2841",
+      "customer": "Stanford Health",
+      "issue": "Feature request: Bulk export",
+      "priority": "Medium",
+      "status": "Pending",
+      "created": "2 days ago"
+    },
+    {
+      "id": "#2840",
+      "customer": "NYU Langone",
+      "issue": "Password reset issue",
+      "priority": "Medium",
+      "status": "Resolved",
+      "created": "3 days ago"
+    }
+  ],
+  "kpis": {
+    "dashboard::Beta Sites": "8/10",
+    "dashboard::Diagnostic Accuracy": "94.2%",
+    "dashboard::User Adoption": "347",
+    "dashboard::Avg. Customer Health": "87",
+    "dashboard::Support Tickets": "12",
+    "dashboard::Team Size": "23",
+    "customers::Total Customers": "8",
+    "customers::Avg Health Score": "87",
+    "customers::NPS Score": "+68",
+    "customers::Retention Rate": "100%",
+    "business-development::Total Leads": "147",
+    "business-development::Early Adopters": "34",
+    "business-development::Preorders": "12",
+    "business-development::Conversion Rate": "28%",
+    "business-development::Total Preorders": "12",
+    "business-development::Avg Order Value": "$267K",
+    "business-development::Expected Launch Revenue": "$8.4M",
+    "business-development::Implementation Timeline": "Q1-Q2",
+    "commercial-strategy::Market Opportunity": "$187B+",
+    "commercial-strategy::Launch Readiness": "91%",
+    "commercial-strategy::Target Markets": "6",
+    "commercial-strategy::Strategic Partnerships": "12",
+    "early-adopter::Active Adopters": "34",
+    "early-adopter::Beta Conversions": "8",
+    "early-adopter::Engagement Score": "94%",
+    "early-adopter::Referrals Generated": "47",
+    "early-adopter::Program Satisfaction": "4.7/5",
+    "early-adopter::NPS Score": "+72",
+    "early-adopter::Feature Requests": "47",
+    "early-adopter::Likelihood to Join Beta": "82%",
+    "beta-testing::Total Patients": "734",
+    "beta-testing::Test Cases": "1,247",
+    "beta-testing::Active Bugs": "23",
+    "beta-testing::Network Uptime": "96.4%",
+    "team::Team Size": "23",
+    "team::Open Positions": "7",
+    "team::Avg Tenure": "2.1",
+    "team::Department Count": "4",
+    "financials::Operational Budget": "$2.4M",
+    "financials::CAC": "$47K",
+    "financials::LTV": "$312K",
+    "financials::Gross Margin": "78.5%",
+    "financials::Payroll": "$195K",
+    "financials::Tech Stack Costs": "$38K",
+    "support::Open Tickets": "12",
+    "support::Avg Response Time": "2.3h",
+    "support::Resolution Rate": "94%",
+    "support::CSAT Score": "4.7/5",
+    "operations::Beta Program Progress": "80%",
+    "operations::Operational Efficiency": "94.2%",
+    "operations::Implementation Speed": "47 days",
+    "operations::Process Compliance": "98.7%",
+    "security::HIPAA Compliance": "100%",
+    "security::Security Score": "A",
+    "security::Data Encryption": "AES-256",
+    "security::Vulnerabilities": "0",
+    "training::Training Completion": "94%",
+    "training::Active Courses": "12",
+    "training::Certified Users": "347",
+    "training::Avg Training Time": "3.2 hrs",
+    "it-systems::System Uptime": "99.97%",
+    "it-systems::API Response Time": "127ms",
+    "it-systems::Data Processing": "2.3M",
+    "it-systems::Storage Usage": "67%",
+    "it-systems::Total Devices": "87",
+    "it-systems::MacBooks": "34",
+    "it-systems::Windows Laptops": "28",
+    "it-systems::Compliance Status": "100%",
+    "it-systems::Remote Lock Available": "87/87",
+    "it-systems::App Management": "34",
+    "it-systems::Lost/Stolen Devices": "0",
+    "it-systems::Geofencing": "Enabled",
+    "it-systems::Monthly IT Spend": "$11,570",
+    "it-systems::Cost per Transaction": "$0.17",
+    "it-systems::Annual Budget": "$138K",
+    "it-systems::Cost Optimization": "$2.4K"
   }
 }
