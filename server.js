@@ -362,10 +362,20 @@ app.use('/api', apiRouter);
 // ---------------------------------------------------------------------------
 // Pages
 // ---------------------------------------------------------------------------
+// Resolve a frontend file whether it lives in public/ or at the repo root,
+// so the app works regardless of how the files were uploaded.
+function asset(name) {
+  const inPublic = path.join(__dirname, 'public', name);
+  if (fs.existsSync(inPublic)) return inPublic;
+  const inRoot = path.join(__dirname, name);
+  if (fs.existsSync(inRoot)) return inRoot;
+  return null;
+}
+
 app.get('/login', (req, res) => {
   if (req.isAuthenticated && req.isAuthenticated()) return res.redirect('/');
-  const loginFile = path.join(__dirname, 'public', 'login.html');
-  if (fs.existsSync(loginFile)) return res.sendFile(loginFile);
+  const loginFile = asset('login.html');
+  if (loginFile) return res.sendFile(loginFile);
   // Fallback: serve a minimal sign-in page if public/login.html is missing,
   // so authentication still works even if the file wasn't deployed.
   res.type('html').send(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
@@ -383,26 +393,26 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/', ensureAuth, (req, res) => {
-  const file = path.join(__dirname, 'public', 'index.html');
-  if (fs.existsSync(file)) return res.sendFile(file);
-  console.error('[serve] MISSING public/index.html at', file);
+  const file = asset('index.html');
+  if (file) return res.sendFile(file);
+  console.error('[serve] MISSING index.html (looked in ./public and ./)');
   res
     .status(500)
     .type('html')
     .send(
       '<div style="font-family:system-ui;max-width:640px;margin:4rem auto;line-height:1.6">' +
         '<h2>Dashboard file not found</h2>' +
-        "<p>You're signed in, but the server can't find <code>public/index.html</code>. " +
-        'Make sure that file is present in the repository under the <code>public/</code> folder and redeploy.</p>' +
+        "<p>You're signed in, but the server can't find <code>index.html</code> in " +
+        '<code>public/</code> or the repo root. Add it and redeploy.</p>' +
         '<p><a href="/auth/logout">Sign out</a></p></div>'
     );
 });
 
 app.get('/app.js', ensureAuth, (req, res) => {
-  const file = path.join(__dirname, 'public', 'app.js');
-  if (fs.existsSync(file)) return res.sendFile(file);
-  console.error('[serve] MISSING public/app.js at', file);
-  res.status(404).type('application/javascript').send('// public/app.js is missing from the deployment');
+  const file = asset('app.js');
+  if (file) return res.sendFile(file);
+  console.error('[serve] MISSING app.js (looked in ./public and ./)');
+  res.status(404).type('application/javascript').send('// app.js is missing from the deployment');
 });
 
 app.use(ensureAuth, express.static(path.join(__dirname, 'public')));
