@@ -23,6 +23,7 @@ const compression = require('compression');
 const morgan = require('morgan');
 
 const { createStore } = require('./storage');
+const { fetchSalesPipeline } = require('./salesConnector');
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -223,6 +224,30 @@ const COLLECTIONS = {
   preorders: { key: 'preorders', prefix: 'po' },
   partnerships: { key: 'partnerships', prefix: 'pt' },
   tickets: { key: 'supportTickets', prefix: 'st' },
+  strategicpartners: { key: 'strategicPartners', prefix: 'sp' },
+  fdasubmissions: { key: 'fdaSubmissions', prefix: 'fda' },
+  intlregulatory: { key: 'intlRegulatory', prefix: 'intl' },
+  clinicalstudies: { key: 'clinicalStudies', prefix: 'cs' },
+  safetyevents: { key: 'safetyEvents', prefix: 'sae' },
+  cloudinfra: { key: 'cloudInfra', prefix: 'ci' },
+  appstack: { key: 'appStack', prefix: 'asx' },
+  itdatabases: { key: 'itDatabases', prefix: 'idb' },
+  monitoringalerts: { key: 'monitoringAlerts', prefix: 'ma' },
+  itassets: { key: 'itAssets', prefix: 'ast' },
+  securitypolicies: { key: 'securityPolicies', prefix: 'pol' },
+  certifications: { key: 'certifications', prefix: 'cert' },
+  trainingprograms: { key: 'trainingPrograms', prefix: 'tp' },
+  strategicinitiatives: { key: 'strategicInitiatives', prefix: 'si' },
+  betatestingsites: { key: 'betaTestingSites', prefix: 'bt' },
+  implementations: { key: 'implementations', prefix: 'bus1' },
+  leadsources: { key: 'leadSources', prefix: 'bus2' },
+  participants: { key: 'participants', prefix: 'ear1' },
+  programbenefits: { key: 'programBenefits', prefix: 'ear2' },
+  engagementactivities: { key: 'engagementActivities', prefix: 'ear3' },
+  programmetrics: { key: 'programMetrics', prefix: 'ear4' },
+  supportteam: { key: 'supportTeam', prefix: 'sup1' },
+  ittickets: { key: 'itTickets', prefix: 'its1' },
+  itescalations: { key: 'itEscalations', prefix: 'its3' },
 };
 
 function wrap(handler) {
@@ -235,7 +260,12 @@ function wrap(handler) {
 
 Object.entries(COLLECTIONS).forEach(([route, { key, prefix }]) => {
   apiRouter.get(`/${route}`, wrap(async (req, res) => {
-    res.json(await store.list(key));
+    const items = await store.list(key);
+    if (route === 'deals') {
+      const remote = await fetchSalesPipeline();
+      return res.json(items.concat(remote));
+    }
+    res.json(items);
   }));
 
   apiRouter.get(`/${route}/:id`, wrap(async (req, res) => {
@@ -271,10 +301,17 @@ apiRouter.put('/financials', wrap(async (req, res) => {
   res.json(await store.putSingleton('financials', req.body));
 }));
 
+apiRouter.get('/kpis', wrap(async (req, res) => {
+  res.json((await store.getSingleton('kpis')) || {});
+}));
+apiRouter.put('/kpis', wrap(async (req, res) => {
+  res.json(await store.putSingleton('kpis', req.body));
+}));
+
 apiRouter.get('/dashboard', wrap(async (req, res) => {
   const sites = await store.list('betaSites');
   const tickets = await store.list('supportTickets');
-  const deals = await store.list('deals');
+  const deals = (await store.list('deals')).concat(await fetchSalesPipeline());
   const positions = await store.list('openPositions');
   const customers = await store.list('customers');
 
