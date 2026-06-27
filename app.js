@@ -46,6 +46,8 @@
     remove: (c, id) => api('DELETE', `/${c}/${id}`),
     financials: () => api('GET', '/financials'),
     saveFinancials: (data) => api('PUT', '/financials', data),
+    kpis: () => api('GET', '/kpis'),
+    saveKpis: (data) => api('PUT', '/kpis', data),
   };
   window.CardioAPI = CardioAPI;
 
@@ -166,6 +168,25 @@
       </tr>`;
   }
 
+  function setMiniStat(sectionId, labelRe, value) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    const labelEl = Array.from(section.querySelectorAll('.mini-stat-label'))
+      .find((t) => labelRe.test(t.textContent || ''));
+    if (!labelEl) return;
+    const box = labelEl.closest('.mini-stat') || labelEl.parentElement;
+    const valEl = box && box.querySelector('.mini-stat-value');
+    if (valEl) valEl.textContent = value;
+  }
+
+  function updateBetaSiteStats() {
+    const sites = betaSitesCache || [];
+    setMiniStat('beta-sites-section', /total beta sites/i, sites.length);
+    setMiniStat('beta-sites-section', /active sites/i, sites.filter((s) => s.status === 'active').length);
+    setMiniStat('beta-sites-section', /in setup/i, sites.filter((s) => s.status === 'setup').length);
+    setMiniStat('beta-sites-section', /pending/i, sites.filter((s) => s.status === 'warning' || s.status === 'pending').length);
+  }
+
   function renderBetaSites() {
     const tbody = document.getElementById('beta-sites-tbody');
     // Dashboard preview table (read-only, no actions column)
@@ -191,6 +212,7 @@
       }
     }
     if (!tbody) return;
+    updateBetaSiteStats();
     if (!betaSitesCache.length) {
       tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:2rem;">No beta sites yet. Use “Add Site” to create one.</td></tr>`;
       return;
@@ -377,7 +399,13 @@
     const grid = document.getElementById('team-grid');
     if (!grid) return;
     if (!teamCache.length) {
-      grid.innerHTML = `<div style="color:var(--text-muted);padding:1.5rem;">No team members yet. Use “Add Team Member”.</div>`;
+      grid.innerHTML = `
+        <div class="team-card">
+          <div class="team-avatar" style="background:linear-gradient(135deg,var(--text-muted),var(--border));">TBD</div>
+          <div class="team-name">TBD</div>
+          <div class="team-role">To be assigned</div>
+          <div class="team-department">Add a team member to populate</div>
+        </div>`;
       return;
     }
     grid.innerHTML = teamCache.map(teamCard).join('');
@@ -478,19 +506,24 @@
   function dealRow(d) {
     const stage = STAGE_LABELS[d.stage] || d.stage || '';
     const prob = d.probability != null ? d.probability + '%' : '—';
+    const fromEngine = d.source === 'sales-engine';
+    const badge = fromEngine
+      ? ' <span title="Synced live from the Sales Engine" style="font-size:0.65rem;background:rgba(43,123,196,0.18);color:#7fb3e0;border:1px solid rgba(43,123,196,0.4);border-radius:4px;padding:0.05rem 0.35rem;vertical-align:middle;">⚡ Sales Engine</span>'
+      : '';
+    const action = fromEngine
+      ? '<span style="color:var(--text-muted);font-size:0.8rem;" title="Managed in the Sales Engine">🔒</span>'
+      : `<button class="dl-remove" data-id="${esc(d.id)}" title="Remove"
+            style="background:rgba(232,57,70,0.15);color:#ff8a80;border:1px solid rgba(232,57,70,0.4);border-radius:6px;padding:0.3rem 0.6rem;cursor:pointer;font-size:0.8rem;">✕</button>`;
     return `
       <tr data-id="${esc(d.id)}">
-        <td><strong>${esc(d.account)}</strong></td>
+        <td><strong>${esc(d.account)}</strong>${badge}</td>
         <td>${esc(d.contact || '—')}</td>
         <td><span class="status-badge active"><span class="status-indicator"></span> ${esc(stage)}</span></td>
         <td>${money(d.value)}</td>
         <td>${esc(prob)}</td>
         <td>${esc(d.nextAction || '—')}</td>
         <td>${esc(d.owner || '—')}</td>
-        <td style="white-space:nowrap;">
-          <button class="dl-remove" data-id="${esc(d.id)}" title="Remove"
-            style="background:rgba(232,57,70,0.15);color:#ff8a80;border:1px solid rgba(232,57,70,0.4);border-radius:6px;padding:0.3rem 0.6rem;cursor:pointer;font-size:0.8rem;">✕</button>
-        </td>
+        <td style="white-space:nowrap;">${action}</td>
       </tr>`;
   }
 
@@ -556,6 +589,474 @@
     });
   }
 
+  // ---- 8. Customers ------------------------------------------------------
+  let customersCache = [];
+  function healthLabel(h) {
+    return { healthy: ['active', 'Healthy'], 'at-risk': ['warning', 'At Risk'], churned: ['pending', 'Churned'] }[h] || ['active', h || '—'];
+  }
+  function removeBtn(cls, id, title) {
+    return `<button class="${cls}" data-id="${esc(id)}" title="${title}" style="margin-left:0.5rem;background:rgba(232,57,70,0.15);color:#ff8a80;border:1px solid rgba(232,57,70,0.4);border-radius:6px;padding:0.25rem 0.5rem;cursor:pointer;font-size:0.75rem;">✕</button>`;
+  }
+  function wireRemove(tbody, cls, collection, cache, rerender) {
+    tbody.querySelectorAll('.' + cls).forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        if (!confirm('Remove this record?')) return;
+        try {
+          await CardioAPI.remove(collection, id);
+          rerender(cache.filter((x) => x.id !== id));
+        } catch (e) { alert('Could not remove: ' + e.message); }
+      });
+    });
+  }
+
+  function renderCustomers() {
+    const tbody = document.getElementById('customers-tbody');
+    if (!tbody) return;
+    if (!customersCache.length) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:1.5rem;">No customers yet.</td></tr>`;
+    } else {
+      tbody.innerHTML = customersCache.map((c) => {
+        const [cls, lbl] = healthLabel(c.health);
+        return `<tr data-id="${esc(c.id)}">
+          <td><strong>${esc(c.name)}</strong></td>
+          <td><div class="health-score"><div class="health-circle ${healthClass(c.healthScore)}">${esc(c.healthScore ?? '—')}</div></div></td>
+          <td>${c.userAdoption != null ? esc(c.userAdoption) + '%' : '—'}</td>
+          <td>${esc(c.casesPerMonth ?? '—')}</td>
+          <td>${fmtDate(c.lastCheckin)}</td>
+          <td>${esc(c.csm || '—')}</td>
+          <td><span class="status-badge ${cls}"><span class="status-indicator"></span> ${esc(lbl)}</span>${removeBtn('cu-remove', c.id, 'Remove')}</td>
+        </tr>`;
+      }).join('');
+      wireRemove(tbody, 'cu-remove', 'customers', customersCache, (next) => { customersCache = next; renderCustomers(); initCustomerStats(); });
+    }
+  }
+  function initCustomerStats() {
+    setCardValue('customers-section', /total customers/i, customersCache.length);
+    const avg = customersCache.length ? Math.round(customersCache.reduce((s, c) => s + (Number(c.healthScore) || 0), 0) / customersCache.length) : '—';
+    setCardValue('customers-section', /avg health/i, avg);
+  }
+  async function initCustomers() {
+    if (!document.getElementById('customers-tbody')) return;
+    try {
+      customersCache = await CardioAPI.list('customers');
+      renderCustomers(); initCustomerStats();
+      ensureActionButton('customers-section', /add\s*customer/i, '➕ Add Customer', openAddCustomerModal);
+    } catch (e) { console.warn('Customers load failed:', e.message); }
+  }
+  function openAddCustomerModal() {
+    modal('Add Customer', `
+      ${field('cu-name','Customer','text','',true)}
+      ${selectField('cu-health','Health',[['healthy','Healthy'],['at-risk','At Risk'],['churned','Churned']])}
+      ${field('cu-score','Health score','number','80')}
+      ${field('cu-adopt','User adoption (%)','number','0')}
+      ${field('cu-cases','Cases / month','number','0')}
+      ${field('cu-csm','CSM assigned','text','')}
+    `, async (root, close, err) => {
+      const name = root.querySelector('#cu-name').value.trim();
+      if (!name) { err('Customer name is required.'); return; }
+      const created = await CardioAPI.create('customers', {
+        name, health: root.querySelector('#cu-health').value,
+        healthScore: Number(root.querySelector('#cu-score').value) || 0,
+        userAdoption: Number(root.querySelector('#cu-adopt').value) || 0,
+        casesPerMonth: Number(root.querySelector('#cu-cases').value) || 0,
+        csm: root.querySelector('#cu-csm').value.trim(),
+      });
+      customersCache.push(created); renderCustomers(); initCustomerStats(); close();
+    });
+  }
+
+  // ---- 9. Support tickets ------------------------------------------------
+  let ticketsCache = [];
+  function ticketStatus(s) {
+    return { open: ['pending', 'Open'], 'in-progress': ['warning', 'In Progress'], closed: ['active', 'Closed'] }[s] || ['pending', s || 'Open'];
+  }
+  function renderTickets() {
+    const tbody = document.getElementById('tickets-tbody');
+    if (!tbody) return;
+    if (!ticketsCache.length) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:1.5rem;">No tickets.</td></tr>`;
+    } else {
+      tbody.innerHTML = ticketsCache.map((t) => {
+        const [cls, lbl] = ticketStatus(t.status);
+        return `<tr data-id="${esc(t.id)}">
+          <td><strong>${esc((t.id || '').toUpperCase())}</strong></td>
+          <td>${esc(t.site || '—')}</td>
+          <td>${esc(t.subject || '—')}</td>
+          <td>${esc(t.priority || '—')}</td>
+          <td><span class="status-badge ${cls}"><span class="status-indicator"></span> ${esc(lbl)}</span></td>
+          <td>${esc(t.assignee || '—')}</td>
+          <td>${fmtDate(t.created)}</td>
+          <td>${esc(t.sla || '—')}${removeBtn('st-remove', t.id, 'Remove')}</td>
+        </tr>`;
+      }).join('');
+      wireRemove(tbody, 'st-remove', 'tickets', ticketsCache, (next) => { ticketsCache = next; renderTickets(); initTicketStats(); });
+    }
+  }
+  function initTicketStats() {
+    setCardValue('support-section', /open tickets/i, ticketsCache.filter((t) => t.status !== 'closed').length);
+  }
+  async function initSupport() {
+    if (!document.getElementById('tickets-tbody')) return;
+    try {
+      ticketsCache = await CardioAPI.list('tickets');
+      renderTickets(); initTicketStats();
+      ensureActionButton('support-section', /new\s*ticket|add\s*ticket|create\s*ticket/i, '➕ New Ticket', openAddTicketModal);
+    } catch (e) { console.warn('Support load failed:', e.message); }
+  }
+  function openAddTicketModal() {
+    modal('New Support Ticket', `
+      ${field('st-subject','Issue','text','',true)}
+      ${field('st-site','Customer / site','text','')}
+      ${selectField('st-priority','Priority',[['low','Low'],['medium','Medium'],['high','High'],['critical','Critical']])}
+      ${selectField('st-status','Status',[['open','Open'],['in-progress','In Progress'],['closed','Closed']])}
+      ${field('st-assignee','Assigned to','text','')}
+    `, async (root, close, err) => {
+      const subject = root.querySelector('#st-subject').value.trim();
+      if (!subject) { err('Issue is required.'); return; }
+      const created = await CardioAPI.create('tickets', {
+        subject, site: root.querySelector('#st-site').value.trim(),
+        priority: root.querySelector('#st-priority').value,
+        status: root.querySelector('#st-status').value,
+        assignee: root.querySelector('#st-assignee').value.trim(),
+        created: new Date().toISOString().slice(0, 10), sla: 'On track',
+      });
+      ticketsCache.push(created); renderTickets(); initTicketStats(); initDashboard(); close();
+    });
+  }
+
+  // ---- 10. Open Positions ------------------------------------------------
+  let positionsCache = [];
+  function renderPositions() {
+    const tbody = document.getElementById('positions-tbody');
+    if (!tbody) return;
+    if (!positionsCache.length) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:1.5rem;">No open positions.</td></tr>`;
+    } else {
+      tbody.innerHTML = positionsCache.map((p) => `
+        <tr data-id="${esc(p.id)}">
+          <td><strong>${esc(p.title)}</strong></td>
+          <td>${esc(p.department || '—')}</td>
+          <td>${esc(p.level || '—')}</td>
+          <td><span class="status-badge active"><span class="status-indicator"></span> ${esc(p.status === 'open' ? 'Active' : p.status || 'Active')}</span></td>
+          <td>${esc(p.applications ?? 0)}${removeBtn('op-remove', p.id, 'Remove')}</td>
+          <td>${fmtDate(p.postedDate)}</td>
+        </tr>`).join('');
+      wireRemove(tbody, 'op-remove', 'positions', positionsCache, (next) => { positionsCache = next; renderPositions(); });
+    }
+  }
+  async function initPositions() {
+    if (!document.getElementById('positions-tbody')) return;
+    try {
+      positionsCache = await CardioAPI.list('positions');
+      renderPositions();
+      ensureActionButton('team-section', /add\s*position|post\s*job|new\s*position|add\s*role/i, '➕ Add Position', openAddPositionModal);
+    } catch (e) { console.warn('Positions load failed:', e.message); }
+  }
+  function openAddPositionModal() {
+    modal('Add Open Position', `
+      ${field('op-title','Position','text','',true)}
+      ${field('op-dept','Department','text','')}
+      ${field('op-level','Level','text','')}
+      ${field('op-apps','Applications','number','0')}
+    `, async (root, close, err) => {
+      const title = root.querySelector('#op-title').value.trim();
+      if (!title) { err('Position title is required.'); return; }
+      const created = await CardioAPI.create('positions', {
+        title, department: root.querySelector('#op-dept').value.trim(),
+        level: root.querySelector('#op-level').value.trim(),
+        applications: Number(root.querySelector('#op-apps').value) || 0,
+        status: 'open', postedDate: new Date().toISOString().slice(0, 10),
+      });
+      positionsCache.push(created); renderPositions(); close();
+    });
+  }
+
+  // ---- 11. Early Adopters ------------------------------------------------
+  let adoptersCache = [];
+  function renderAdopters() {
+    const tbody = document.getElementById('adopters-tbody');
+    if (!tbody) return;
+    if (!adoptersCache.length) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:1.5rem;">No participants yet.</td></tr>`;
+    } else {
+      tbody.innerHTML = adoptersCache.map((a) => `
+        <tr data-id="${esc(a.id)}">
+          <td><strong>${esc(a.name)}</strong></td>
+          <td>${esc(a.champion || '—')}</td>
+          <td>${esc(a.engagement || '—')}</td>
+          <td>${esc(a.betaInterest || '—')}</td>
+          <td>${fmtDate(a.joinedDate)}</td>
+          <td><span class="status-badge active"><span class="status-indicator"></span> ${esc(a.status || 'Active')}</span></td>
+          <td>${removeBtn('ea-remove', a.id, 'Remove')}</td>
+        </tr>`).join('');
+      wireRemove(tbody, 'ea-remove', 'adopters', adoptersCache, (next) => { adoptersCache = next; renderAdopters(); });
+    }
+  }
+  async function initAdopters() {
+    if (!document.getElementById('adopters-tbody')) return;
+    try {
+      adoptersCache = await CardioAPI.list('adopters');
+      renderAdopters();
+      ensureActionButton('early-adopter-section', /add\s*participant|add\s*adopter|enroll/i, '➕ Add Participant', openAddAdopterModal);
+    } catch (e) { console.warn('Adopters load failed:', e.message); }
+  }
+  function openAddAdopterModal() {
+    modal('Add Program Participant', `
+      ${field('ea-name','Organization','text','',true)}
+      ${field('ea-champion','Champion','text','')}
+      ${field('ea-tier','Tier','text','Early Adopter')}
+      ${selectField('ea-eng','Engagement',[['High','High'],['Medium','Medium'],['Low','Low']])}
+      ${selectField('ea-interest','Beta interest',[['Confirmed','Confirmed'],['Interested','Interested'],['Undecided','Undecided']])}
+      ${field('ea-ref','Referrals','number','0')}
+    `, async (root, close, err) => {
+      const name = root.querySelector('#ea-name').value.trim();
+      if (!name) { err('Organization is required.'); return; }
+      const created = await CardioAPI.create('adopters', {
+        name, champion: root.querySelector('#ea-champion').value.trim(),
+        tier: root.querySelector('#ea-tier').value.trim(),
+        engagement: root.querySelector('#ea-eng').value,
+        betaInterest: root.querySelector('#ea-interest').value,
+        referrals: Number(root.querySelector('#ea-ref').value) || 0,
+        status: 'active', joinedDate: new Date().toISOString().slice(0, 10),
+      });
+      adoptersCache.push(created); renderAdopters(); close();
+    });
+  }
+
+  // Set a KPI card's value by matching its card-title within a section.
+  function setCardValue(sectionId, titleRe, value) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    const titleEl = Array.from(section.querySelectorAll('.card-title'))
+      .find((t) => titleRe.test(t.textContent || ''));
+    if (!titleEl) return;
+    const card = titleEl.closest('.card') || titleEl.parentElement.parentElement;
+    const valEl = card && card.querySelector('.metric-value, .stat-value');
+    if (valEl) valEl.textContent = value;
+  }
+
+  function num(v) {
+    const str = String(v == null ? '' : v);
+    const m = str.replace(/[,$ ]/g, '').match(/-?\d+\.?\d*/);
+    let n = m ? parseFloat(m[0]) : 0;
+    if (/m\b/i.test(str)) n *= 1e6; else if (/k\b/i.test(str)) n *= 1e3;
+    return n;
+  }
+
+  // Compute KPI cards from live data; hide any card with no backing value.
+  async function computeKPIs() {
+    const cache = {};
+    const get = async (r) => { if (!cache[r]) cache[r] = await CardioAPI.list(r).catch(() => []); return cache[r]; };
+    const sum = (arr, f) => arr.reduce((s, x) => s + num(x[f]), 0);
+
+    const team = await get('team');
+    const cust = await get('customers');
+    const tickets = await get('tickets');
+    const fda = await get('fdasubmissions');
+    const studies = await get('clinicalstudies');
+    const cloud = await get('cloudinfra');
+    const itTickets = await get('ittickets');
+    const training = await get('trainingprograms');
+    const certs = await get('certifications');
+    const inits = await get('strategicinitiatives');
+    const btSites = await get('betatestingsites');
+    const parts = await get('participants');
+    const deals = await get('deals');
+    const positions = await get('positions');
+
+    const C = [
+      ['dashboard-section', /team size/i, team.length],
+      ['team-section', /team size|total headcount|employees/i, team.length],
+      ['team-section', /open (positions|roles)/i, positions.length],
+      ['customers-section', /total customers/i, cust.length],
+      ['customers-section', /avg health/i, cust.length ? Math.round(sum(cust, 'healthScore') / cust.length) : '—'],
+      ['support-section', /open tickets/i, tickets.filter((t) => t.status !== 'closed').length],
+      ['regulatory-section', /(total|active) (submissions|filings)/i, fda.length],
+      ['regulatory-section', /(in review|pending|under review)/i, fda.filter((f) => /review|pending|prepar/i.test(f.status || '')).length],
+      ['clinical-ops-section', /(active|total) (studies|trials)/i, studies.length],
+      ['clinical-ops-section', /(total )?enrolled|enrollment/i, sum(studies, 'enrolled')],
+      ['it-systems-section', /(cloud )?services|infrastructure/i, cloud.length],
+      ['it-systems-section', /open (it )?tickets|it support/i, itTickets.length],
+      ['training-section', /(total )?programs/i, training.length],
+      ['training-section', /(total )?enrolled|enrollment/i, sum(training, 'enrolled')],
+      ['security-section', /certifications/i, certs.length],
+      ['operations-section', /(active|total) initiatives/i, inits.length],
+      ['beta-testing-section', /(total |active )?sites/i, btSites.length],
+      ['early-adopter-section', /(active )?participants/i, parts.length],
+      ['business-development-section', /(total|active) (deals|opportunities)/i, deals.length],
+      ['business-development-section', /pipeline value/i, '$' + sum(deals, 'value').toLocaleString()],
+    ];
+    C.forEach(([sec, re, val]) => { if (val !== '—') setCardValue(sec, re, val); });
+  }
+
+  // Fill the remaining standalone KPI cards from the editable kpis store, and
+  // make each click-to-edit (persists to /api/kpis).
+  let kpisStore = {};
+  async function applyStoredKPIs() {
+    try { kpisStore = await CardioAPI.kpis(); } catch (e) { return; }
+    Object.entries(kpisStore).forEach(([key, val]) => {
+      const sep = key.indexOf('::');
+      if (sep === -1) return;
+      const sectionId = key.slice(0, sep) + '-section';
+      const label = key.slice(sep + 2);
+      setEditableKPI(sectionId, label, val, key);
+    });
+  }
+
+  function setEditableKPI(sectionId, label, value, key) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    const labelEl = Array.from(section.querySelectorAll('.card-title, .stat-label, .mini-stat-label'))
+      .find((t) => (t.textContent || '').trim().toLowerCase() === label.toLowerCase());
+    if (!labelEl) return;
+    const card = labelEl.closest('.card') || labelEl.parentElement.parentElement;
+    const valEl = card && card.querySelector('.metric-value, .stat-value, .mini-stat-value');
+    if (!valEl) return;
+    // Only fill if it's still the placeholder (don't clobber computed live values).
+    if (valEl.textContent.trim() !== '—') return;
+    valEl.textContent = value;
+    valEl.dataset.kpiKey = key;
+    valEl.style.cursor = 'pointer';
+    valEl.title = 'Click to edit';
+    valEl.addEventListener('click', () => editKPI(valEl, key));
+  }
+
+  function editKPI(valEl, key) {
+    const cur = valEl.textContent;
+    const input = document.createElement('input');
+    input.value = cur;
+    input.style.cssText = 'width:6em;font:inherit;background:#0A1929;color:#E8F1F5;border:1px solid #2B7BC4;border-radius:6px;padding:0.15rem 0.4rem;';
+    valEl.style.display = 'none';
+    valEl.parentNode.insertBefore(input, valEl);
+    input.focus(); input.select();
+    let done = false;
+    const finish = async (save) => {
+      if (done) return; done = true;
+      const nv = save ? (input.value.trim() || cur) : cur;
+      valEl.textContent = nv;
+      valEl.style.display = '';
+      input.remove();
+      if (save && nv !== cur) {
+        kpisStore[key] = nv;
+        try { await CardioAPI.saveKpis(kpisStore); } catch (e) { alert('Could not save: ' + e.message); }
+      }
+    };
+    input.addEventListener('blur', () => finish(true));
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+      if (e.key === 'Escape') { finish(false); }
+    });
+  }
+
+  // Hide any KPI card still showing the placeholder (no computed or stored value).
+  function finalSweepKPIs() {
+    document.querySelectorAll('.metric-value, .stat-value, .mini-stat-value').forEach((el) => {
+      if (el.textContent.trim() === '—') {
+        const card = el.closest('.card');
+        if (card) card.style.display = 'none';
+      }
+    });
+  }
+
+  const GENERIC_TABLES = [
+    {tbody:"strategicpartners-tbody",route:"strategicpartners",section:"commercial-strategy",title:"Strategic Partnerships",cols:[{f:"partner",l:"Partner"},{f:"type",l:"Type"},{f:"strategicValue",l:"Strategic Value"},{f:"status",l:"Status"}]},
+    {tbody:"fdasubmissions-tbody",route:"fdasubmissions",section:"regulatory",title:"FDA Submissions",cols:[{f:"submissionId",l:"Submission ID"},{f:"type",l:"Type"},{f:"productDevice",l:"Product/Device"},{f:"status",l:"Status"},{f:"targetSubmission",l:"Target Submission"},{f:"targetDecision",l:"Target Decision"},{f:"lead",l:"Lead"}]},
+    {tbody:"intlregulatory-tbody",route:"intlregulatory",section:"regulatory",title:"International Regulatory",cols:[{f:"countryRegion",l:"Country/Region"},{f:"regulatoryBody",l:"Regulatory Body"},{f:"status",l:"Status"},{f:"certification",l:"Certification"},{f:"targetSubmission",l:"Target Submission"}]},
+    {tbody:"clinicalstudies-tbody",route:"clinicalstudies",section:"clinical-ops",title:"Clinical Studies",cols:[{f:"studyId",l:"Study ID"},{f:"title",l:"Title"},{f:"phase",l:"Phase"},{f:"status",l:"Status"},{f:"sites",l:"Sites"},{f:"enrolled",l:"Enrolled"},{f:"target",l:"Target"},{f:"primaryCompletion",l:"Primary Completion"}]},
+    {tbody:"safetyevents-tbody",route:"safetyevents",section:"clinical-ops",title:"Safety",cols:[{f:"saeId",l:"SAE ID"},{f:"study",l:"Study"},{f:"site",l:"Site"},{f:"eventDescription",l:"Event Description"},{f:"severity",l:"Severity"},{f:"relatedToDevice",l:"Related to Device"},{f:"reportedDate",l:"Reported Date"},{f:"status",l:"Status"}]},
+    {tbody:"cloudinfra-tbody",route:"cloudinfra",section:"it-systems",title:"Cloud Infrastructure",cols:[{f:"service",l:"Service"},{f:"region",l:"Region"},{f:"instances",l:"Instances"},{f:"status",l:"Status"},{f:"monthlyCost",l:"Monthly Cost"}]},
+    {tbody:"appstack-tbody",route:"appstack",section:"it-systems",title:"Application Stack",cols:[{f:"service",l:"Service"},{f:"version",l:"Version"},{f:"instances",l:"Instances"},{f:"status",l:"Status"},{f:"cpu",l:"CPU"},{f:"memory",l:"Memory"}]},
+    {tbody:"itdatabases-tbody",route:"itdatabases",section:"it-systems",title:"Database Management",cols:[{f:"database",l:"Database"},{f:"type",l:"Type"},{f:"size",l:"Size"},{f:"status",l:"Status"},{f:"replication",l:"Replication"},{f:"lastBackup",l:"Last Backup"}]},
+    {tbody:"monitoringalerts-tbody",route:"monitoringalerts",section:"it-systems",title:"Monitoring",cols:[{f:"alertType",l:"Alert Type"},{f:"threshold",l:"Threshold"},{f:"status",l:"Status"},{f:"lastTriggered",l:"Last Triggered"},{f:"recipients",l:"Recipients"}]},
+    {tbody:"itassets-tbody",route:"itassets",section:"it-systems",title:"Compliance Status",cols:[{f:"assetId",l:"Asset ID"},{f:"deviceType",l:"Device Type"},{f:"model",l:"Model"},{f:"assignedTo",l:"Assigned To"},{f:"status",l:"Status"},{f:"lastCheckIn",l:"Last Check-in"},{f:"compliance",l:"Compliance"}]},
+    {tbody:"securitypolicies-tbody",route:"securitypolicies",section:"it-systems",title:"Device Security",cols:[{f:"securityPolicy",l:"Security Policy"},{f:"requirement",l:"Requirement"},{f:"complianceRate",l:"Compliance Rate"},{f:"nonCompliant",l:"Non-Compliant"},{f:"status",l:"Status"}]},
+    {tbody:"certifications-tbody",route:"certifications",section:"security",title:"Compliance Certifications",cols:[{f:"certification",l:"Certification"},{f:"status",l:"Status"},{f:"lastAudit",l:"Last Audit"},{f:"nextAudit",l:"Next Audit"},{f:"auditor",l:"Auditor"},{f:"score",l:"Score"}]},
+    {tbody:"trainingprograms-tbody",route:"trainingprograms",section:"training",title:"Training Programs",cols:[{f:"program",l:"Program"},{f:"type",l:"Type"},{f:"duration",l:"Duration"},{f:"enrolled",l:"Enrolled"},{f:"completed",l:"Completed"},{f:"passRate",l:"Pass Rate"}]},
+    {tbody:"strategicinitiatives-tbody",route:"strategicinitiatives",section:"operations",title:"Strategic Initiatives",cols:[{f:"initiative",l:"Initiative"},{f:"owner",l:"Owner"},{f:"status",l:"Status"},{f:"progress",l:"Progress"},{f:"targetDate",l:"Target Date"},{f:"impact",l:"Impact"}]},
+    {tbody:"betatestingsites-tbody",route:"betatestingsites",section:"beta-testing",title:"Beta Sites Status",cols:[{f:"site",l:"Site"},{f:"patients",l:"Patients"},{f:"tests",l:"Tests"},{f:"uptime",l:"Uptime"},{f:"status",l:"Status"}]},
+    {tbody:"businessdevelopmentx1-tbody",route:"implementations",section:"business-development",title:"Organization table",cols:[{f:"organization",l:"Organization"},{f:"contractValue",l:"Contract Value"},{f:"term",l:"Term"},{f:"signedDate",l:"Signed Date"},{f:"goLiveTarget",l:"Go-Live Target"},{f:"status",l:"Status"}]},
+    {tbody:"businessdevelopmentx2-tbody",route:"leadsources",section:"business-development",title:"Source table",cols:[{f:"source",l:"Source"},{f:"leadsGenerated",l:"Leads Generated"},{f:"conversionRate",l:"Conversion Rate"},{f:"costPerLead",l:"Cost Per Lead"},{f:"pipelineValue",l:"Pipeline Value"},{f:"roi",l:"ROI"}]},
+    {tbody:"earlyadopterx1-tbody",route:"participants",section:"early-adopter",title:"Organization table",cols:[{f:"organization",l:"Organization"},{f:"champion",l:"Champion"},{f:"enrollmentDate",l:"Enrollment Date"},{f:"engagement",l:"Engagement"},{f:"betaInterest",l:"Beta Interest"},{f:"referrals",l:"Referrals"},{f:"status",l:"Status"}]},
+    {tbody:"earlyadopterx2-tbody",route:"programbenefits",section:"early-adopter",title:"Benefit table",cols:[{f:"benefit",l:"Benefit"},{f:"description",l:"Description"},{f:"value",l:"Value"},{f:"eligibility",l:"Eligibility"},{f:"status",l:"Status"}]},
+    {tbody:"earlyadopterx3-tbody",route:"engagementactivities",section:"early-adopter",title:"Activity table",cols:[{f:"activity",l:"Activity"},{f:"type",l:"Type"},{f:"date",l:"Date"},{f:"participants",l:"Participants"},{f:"status",l:"Status"}]},
+    {tbody:"earlyadopterx4-tbody",route:"programmetrics",section:"early-adopter",title:"Metric table",cols:[{f:"metric",l:"Metric"},{f:"current",l:"Current"},{f:"target",l:"Target"},{f:"status",l:"Status"},{f:"trend",l:"Trend"}]},
+    {tbody:"supportx1-tbody",route:"supportteam",section:"support",title:"Team Member table",cols:[{f:"teamMember",l:"Team Member"},{f:"ticketsResolvedWeek",l:"Tickets Resolved (Week)"},{f:"avgResponseTime",l:"Avg Response Time"},{f:"csatScore",l:"CSAT Score"},{f:"activeTickets",l:"Active Tickets"},{f:"status",l:"Status"}]},
+    {tbody:"itsystemsx1-tbody",route:"ittickets",section:"it-systems",title:"Ticket ID table",cols:[{f:"ticketId",l:"Ticket ID"},{f:"type",l:"Type"},{f:"issue",l:"Issue"},{f:"priority",l:"Priority"},{f:"status",l:"Status"},{f:"assignedTo",l:"Assigned To"},{f:"created",l:"Created"}]},
+    {tbody:"itsystemsx2-tbody",route:"ittickets",section:"it-systems",title:"Ticket ID table",cols:[{f:"ticketId",l:"Ticket ID"},{f:"type",l:"Type"},{f:"issue",l:"Issue"},{f:"priority",l:"Priority"},{f:"status",l:"Status"},{f:"assignedTo",l:"Assigned To"},{f:"created",l:"Created"}]},
+    {tbody:"itsystemsx3-tbody",route:"itescalations",section:"it-systems",title:"ID table",cols:[{f:"id",l:"ID"},{f:"customer",l:"Customer"},{f:"issue",l:"Issue"},{f:"priority",l:"Priority"},{f:"status",l:"Status"},{f:"created",l:"Created"}]}
+  ];
+  function genStatusBadge(v) {
+    const t = String(v || '').toLowerCase();
+    let cls = 'active';
+    if (/(at[- ]?risk|warning|pending|in progress|preparing|degraded|review)/.test(t)) cls = 'warning';
+    else if (/(closed|inactive|offline|blocked|non[- ]?compliant|critical|failed|rejected)/.test(t)) cls = 'pending';
+    return `<span class="status-badge ${cls}"><span class="status-indicator"></span> ${esc(v)}</span>`;
+  }
+
+  function renderGenericTable(b, data) {
+    const tbody = document.getElementById(b.tbody);
+    if (!tbody) return;
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="${b.cols.length + 1}" style="text-align:center;color:var(--text-muted);padding:1.5rem;">No records.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.map((row) => {
+      const cells = b.cols.map((c, i) => {
+        let v = row[c.f];
+        let inner = (v == null || v === '') ? '—' : (/status/i.test(c.f) ? genStatusBadge(v) : esc(v));
+        return i === 0 ? `<td><strong>${inner}</strong></td>` : `<td>${inner}</td>`;
+      }).join('');
+      return `<tr data-id="${esc(row.id)}">${cells}<td>${removeBtn('g-remove', row.id, 'Remove')}</td></tr>`;
+    }).join('');
+    tbody.querySelectorAll('.g-remove').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Remove this record?')) return;
+        try {
+          await CardioAPI.remove(b.route, btn.getAttribute('data-id'));
+          b._cache = b._cache.filter((x) => x.id !== btn.getAttribute('data-id'));
+          renderGenericTable(b, b._cache);
+        } catch (e) { alert('Could not remove: ' + e.message); }
+      });
+    });
+  }
+
+  function addAboveTable(b) {
+    const tbody = document.getElementById(b.tbody);
+    if (!tbody) return;
+    const table = tbody.closest('table');
+    if (!table || table.previousElementSibling?.classList?.contains('g-add')) return;
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-primary g-add';
+    btn.style.marginBottom = '0.75rem';
+    btn.textContent = '➕ Add';
+    btn.addEventListener('click', () => {
+      const fields = b.cols.map((c) => field('g-' + c.f, c.l, 'text', '')).join('');
+      modal('Add to ' + b.title, fields, async (root, close, err) => {
+        const payload = {};
+        b.cols.forEach((c) => { payload[c.f] = root.querySelector('#g-' + c.f).value.trim(); });
+        if (!Object.values(payload).some((v) => v)) { err('Enter at least one value.'); return; }
+        const created = await CardioAPI.create(b.route, payload);
+        b._cache.push(created);
+        renderGenericTable(b, b._cache);
+        close();
+      });
+    });
+    table.parentNode.insertBefore(btn, table);
+  }
+
+  async function initGenericTables() {
+    for (const b of GENERIC_TABLES) {
+      const tbody = document.getElementById(b.tbody);
+      if (!tbody) continue;
+      try {
+        b._cache = await CardioAPI.list(b.route);
+        renderGenericTable(b, b._cache);
+        addAboveTable(b);
+      } catch (e) { console.warn(b.route, 'load failed:', e.message); }
+    }
+  }
+
   // ---- Generic modal helper ----------------------------------------------
   function modal(title, fieldsHTML, onSave) {
     const wrap = document.createElement('div');
@@ -587,13 +1088,16 @@
   }
 
   // ---- Boot ---------------------------------------------------------------
-  function boot() {
+  async function boot() {
     initUser();
-    initDashboard();
-    initBetaSites();
-    initTeam();
-    initFinancials();
-    initPipeline();
+    await Promise.all([
+      initDashboard(), initBetaSites(), initTeam(), initFinancials(),
+      initPipeline(), initCustomers(), initSupport(), initPositions(),
+      initAdopters(), initGenericTables(),
+    ]);
+    await computeKPIs();
+    await applyStoredKPIs();
+    finalSweepKPIs();
   }
 
   if (document.readyState === 'loading') {
