@@ -363,11 +363,26 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/', ensureAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  const file = path.join(__dirname, 'public', 'index.html');
+  if (fs.existsSync(file)) return res.sendFile(file);
+  console.error('[serve] MISSING public/index.html at', file);
+  res
+    .status(500)
+    .type('html')
+    .send(
+      '<div style="font-family:system-ui;max-width:640px;margin:4rem auto;line-height:1.6">' +
+        '<h2>Dashboard file not found</h2>' +
+        "<p>You're signed in, but the server can't find <code>public/index.html</code>. " +
+        'Make sure that file is present in the repository under the <code>public/</code> folder and redeploy.</p>' +
+        '<p><a href="/auth/logout">Sign out</a></p></div>'
+    );
 });
 
 app.get('/app.js', ensureAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'app.js'));
+  const file = path.join(__dirname, 'public', 'app.js');
+  if (fs.existsSync(file)) return res.sendFile(file);
+  console.error('[serve] MISSING public/app.js at', file);
+  res.status(404).type('application/javascript').send('// public/app.js is missing from the deployment');
 });
 
 app.use(ensureAuth, express.static(path.join(__dirname, 'public')));
