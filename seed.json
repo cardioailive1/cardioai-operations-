@@ -1,0 +1,368 @@
+{
+  "betaSites": [
+    {
+      "id": "bs_cleveland",
+      "name": "Cleveland Clinic",
+      "location": "Cleveland, OH",
+      "status": "active",
+      "healthScore": 92,
+      "goLiveDate": "2026-03-15",
+      "activeUsers": 67,
+      "casesProcessed": 1247
+    },
+    {
+      "id": "bs_ucsf",
+      "name": "UCSF Medical Center",
+      "location": "San Francisco, CA",
+      "status": "active",
+      "healthScore": 89,
+      "goLiveDate": "2026-04-02",
+      "activeUsers": 54,
+      "casesProcessed": 982
+    },
+    {
+      "id": "bs_mayo",
+      "name": "Mayo Clinic",
+      "location": "Rochester, MN",
+      "status": "active",
+      "healthScore": 85,
+      "goLiveDate": "2026-04-20",
+      "activeUsers": 71,
+      "casesProcessed": 1456
+    },
+    {
+      "id": "bs_hopkins",
+      "name": "Johns Hopkins",
+      "location": "Baltimore, MD",
+      "status": "active",
+      "healthScore": 78,
+      "goLiveDate": "2026-05-05",
+      "activeUsers": 42,
+      "casesProcessed": 634
+    },
+    {
+      "id": "bs_massgen",
+      "name": "Mass General Hospital",
+      "location": "Boston, MA",
+      "status": "active",
+      "healthScore": 91,
+      "goLiveDate": "2026-05-18",
+      "activeUsers": 58,
+      "casesProcessed": 1089
+    },
+    {
+      "id": "bs_stanford",
+      "name": "Stanford Health Care",
+      "location": "Palo Alto, CA",
+      "status": "active",
+      "healthScore": 83,
+      "goLiveDate": "2026-06-03",
+      "activeUsers": 49,
+      "casesProcessed": 823
+    },
+    {
+      "id": "bs_cedars",
+      "name": "Cedars-Sinai",
+      "location": "Los Angeles, CA",
+      "status": "warning",
+      "healthScore": 72,
+      "goLiveDate": "2026-06-15",
+      "activeUsers": 31,
+      "casesProcessed": 412
+    },
+    {
+      "id": "bs_nyu",
+      "name": "NYU Langone",
+      "location": "New York, NY",
+      "status": "active",
+      "healthScore": 86,
+      "goLiveDate": "2026-07-01",
+      "activeUsers": 55,
+      "casesProcessed": 967
+    },
+    {
+      "id": "bs_mountsinai",
+      "name": "Mount Sinai",
+      "location": "New York, NY",
+      "status": "setup",
+      "healthScore": 65,
+      "goLiveDate": "2026-07-22",
+      "activeUsers": 18,
+      "casesProcessed": 189
+    },
+    {
+      "id": "bs_houston",
+      "name": "Houston Methodist",
+      "location": "Houston, TX",
+      "status": "setup",
+      "healthScore": 58,
+      "goLiveDate": "2026-08-05",
+      "activeUsers": 12,
+      "casesProcessed": 67
+    }
+  ],
+  "team": [
+    {
+      "id": "tm_1",
+      "name": "Sampson Tonywell",
+      "role": "Chief Operating Officer",
+      "department": "Executive",
+      "email": "tonywell@cardioailive.com",
+      "status": "active"
+    },
+    {
+      "id": "tm_2",
+      "name": "Galax",
+      "role": "Head of Sales",
+      "department": "Commercial",
+      "email": "galax@cardioailive.com",
+      "status": "active"
+    },
+    {
+      "id": "tm_3",
+      "name": "Dr. Nahar",
+      "role": "Clinical Advisor",
+      "department": "Clinical",
+      "email": "nahar@cardioailive.com",
+      "status": "active"
+    },
+    {
+      "id": "tm_4",
+      "name": "Avi",
+      "role": "Sales Representative",
+      "department": "Commercial",
+      "email": "avi@cardioailive.com",
+      "status": "active"
+    }
+  ],
+  "openPositions": [
+    {
+      "id": "op_1",
+      "title": "Senior ML Engineer",
+      "department": "Engineering",
+      "location": "Remote",
+      "type": "Full-time",
+      "status": "open"
+    },
+    {
+      "id": "op_2",
+      "title": "Clinical Implementation Specialist",
+      "department": "Clinical",
+      "location": "Hybrid",
+      "type": "Full-time",
+      "status": "open"
+    },
+    {
+      "id": "op_3",
+      "title": "Regulatory Affairs Manager",
+      "department": "Regulatory",
+      "location": "Remote",
+      "type": "Full-time",
+      "status": "open"
+    }
+  ],
+  "deals": [
+    {
+      "id": "dl_1",
+      "account": "Kaiser Permanente",
+      "stage": "qualification",
+      "value": 480000,
+      "owner": "Galax",
+      "closeDate": "2027-02-15",
+      "contact": "VP Cardiology",
+      "probability": 40,
+      "nextAction": "Technical evaluation"
+    },
+    {
+      "id": "dl_2",
+      "account": "HCA Healthcare",
+      "stage": "proposal",
+      "value": 720000,
+      "owner": "Galax",
+      "closeDate": "2027-01-30",
+      "contact": "Chief Medical Officer",
+      "probability": 60,
+      "nextAction": "Proposal review"
+    },
+    {
+      "id": "dl_3",
+      "account": "Ascension Health",
+      "stage": "negotiation",
+      "value": 950000,
+      "owner": "Avi",
+      "closeDate": "2027-03-10",
+      "contact": "Director of Imaging",
+      "probability": 75,
+      "nextAction": "Contract redlines"
+    },
+    {
+      "id": "dl_4",
+      "account": "Intermountain Health",
+      "stage": "discovery",
+      "value": 340000,
+      "owner": "Avi",
+      "closeDate": "2027-04-01",
+      "contact": "Innovation Lead",
+      "probability": 20,
+      "nextAction": "Discovery call"
+    }
+  ],
+  "customers": [
+    {
+      "id": "cu_1",
+      "name": "Cleveland Clinic",
+      "health": "healthy",
+      "arr": 0,
+      "csm": "Dr. Nahar",
+      "renewalDate": "2027-03-15",
+      "notes": "Lead beta site, high engagement"
+    },
+    {
+      "id": "cu_2",
+      "name": "Mayo Clinic",
+      "health": "healthy",
+      "arr": 0,
+      "csm": "Dr. Nahar",
+      "renewalDate": "2027-04-20",
+      "notes": "Strong adoption across cardiology"
+    },
+    {
+      "id": "cu_3",
+      "name": "Cedars-Sinai",
+      "health": "at-risk",
+      "arr": 0,
+      "csm": "Dr. Nahar",
+      "renewalDate": "2027-06-15",
+      "notes": "Low utilization, needs intervention"
+    }
+  ],
+  "earlyAdopters": [
+    {
+      "id": "ea_1",
+      "name": "Cleveland Clinic",
+      "tier": "Founding Partner",
+      "joinedDate": "2026-03-15",
+      "status": "active"
+    },
+    {
+      "id": "ea_2",
+      "name": "Mayo Clinic",
+      "tier": "Founding Partner",
+      "joinedDate": "2026-04-20",
+      "status": "active"
+    },
+    {
+      "id": "ea_3",
+      "name": "Mass General Hospital",
+      "tier": "Early Adopter",
+      "joinedDate": "2026-05-18",
+      "status": "active"
+    }
+  ],
+  "preorders": [
+    {
+      "id": "po_1",
+      "customer": "Kaiser Permanente",
+      "package": "Enterprise",
+      "units": 12,
+      "value": 480000,
+      "status": "committed"
+    },
+    {
+      "id": "po_2",
+      "customer": "HCA Healthcare",
+      "package": "Enterprise",
+      "units": 18,
+      "value": 720000,
+      "status": "verbal"
+    }
+  ],
+  "partnerships": [
+    {
+      "id": "pt_1",
+      "partner": "Philips Healthcare",
+      "type": "Technology",
+      "status": "active",
+      "owner": "Sampson Tonywell"
+    },
+    {
+      "id": "pt_2",
+      "partner": "Epic Systems",
+      "type": "Integration",
+      "status": "in-discussion",
+      "owner": "Sampson Tonywell"
+    }
+  ],
+  "supportTickets": [
+    {
+      "id": "st_1",
+      "subject": "PACS integration latency at UCSF",
+      "site": "UCSF Medical Center",
+      "priority": "high",
+      "status": "open",
+      "assignee": "Engineering"
+    },
+    {
+      "id": "st_2",
+      "subject": "User onboarding question - Mount Sinai",
+      "site": "Mount Sinai",
+      "priority": "medium",
+      "status": "in-progress",
+      "assignee": "Clinical"
+    },
+    {
+      "id": "st_3",
+      "subject": "Report export formatting",
+      "site": "Cedars-Sinai",
+      "priority": "low",
+      "status": "open",
+      "assignee": "Engineering"
+    }
+  ],
+  "financials": {
+    "metrics": {
+      "operationalBudget": 2400000,
+      "cac": 47000,
+      "ltv": 312000,
+      "grossMargin": 78.5,
+      "payroll": 195000,
+      "techStackCosts": 38000,
+      "monthlyBurn": 285000,
+      "runwayMonths": 14,
+      "cashOnHand": 3990000,
+      "committedPipeline": 1200000
+    },
+    "budget": [
+      {
+        "department": "Operations",
+        "allocated": 720000,
+        "spent": 562400,
+        "headcount": 8
+      },
+      {
+        "department": "Customer Success",
+        "allocated": 540000,
+        "spent": 419400,
+        "headcount": 6
+      },
+      {
+        "department": "Support",
+        "allocated": 450000,
+        "spent": 346500,
+        "headcount": 5
+      },
+      {
+        "department": "Implementation",
+        "allocated": 390000,
+        "spent": 308100,
+        "headcount": 4
+      },
+      {
+        "department": "Technology & Tools",
+        "allocated": 300000,
+        "spent": 228000,
+        "headcount": 0
+      }
+    ]
+  }
+}
