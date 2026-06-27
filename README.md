@@ -196,6 +196,39 @@ SELECT collection, count(*) FROM documents GROUP BY collection;
 To re-seed from scratch, drop the rows (`TRUNCATE documents, singletons;`) and
 restart the service.
 
+---
+
+## Sales Engine integration (live pipeline)
+
+The Sales Pipeline tab can live-pull deals from the **Cardio AI Sales Automation
+Engine** and show them alongside any deals you add by hand.
+
+**How it works:** the ops platform calls a read-only endpoint on the sales engine
+(`GET /api/integrations/pipeline`) server-to-server, authenticated with a shared
+secret, maps each record into a deal, and merges it into `/api/deals` and the
+dashboard pipeline value. Results are cached for 60 seconds. If the engine is
+asleep or unreachable, the last cached pipeline (or just your manual deals) is
+served — the platform never breaks. Sales-engine deals show a "⚡ Sales Engine"
+badge and are read-only here (manage them in the engine); deals you add by hand
+stay fully editable.
+
+**Setup (two sides, same key):**
+
+1. Generate a shared secret:
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   ```
+2. **On the sales engine** — paste the block from
+   `SALES_ENGINE_pipeline_endpoint.js` into its `server.js` (with the other
+   routes), adjust the one marked line to point at its deals/leads data, and set
+   `INTEGRATION_API_KEY` in its Render environment.
+3. **On this ops platform** — set in Render:
+   - `SALES_ENGINE_URL` = the engine's URL (e.g. `https://your-sales-engine.onrender.com`)
+   - `INTEGRATION_API_KEY` = the *same* secret as the engine
+4. Redeploy. Open the Sales Pipeline tab — engine deals appear with the badge.
+
+The secret only ever lives in server environments; it never reaches the browser.
+
 ## API reference
 
 All `/api/*` routes require an authenticated session.
