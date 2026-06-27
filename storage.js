@@ -17,7 +17,7 @@ const path = require('path');
 const SEED_FILE = path.join(__dirname, 'seed.json');
 
 // Which top-level keys in seed.json are collections vs singletons.
-const SINGLETON_KEYS = ['financials'];
+const SINGLETON_KEYS = ['financials', 'kpis'];
 
 function loadSeed() {
   return JSON.parse(fs.readFileSync(SEED_FILE, 'utf8'));
