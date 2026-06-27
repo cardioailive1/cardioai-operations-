@@ -168,6 +168,28 @@
 
   function renderBetaSites() {
     const tbody = document.getElementById('beta-sites-tbody');
+    // Dashboard preview table (read-only, no actions column)
+    const preview = document.getElementById('beta-sites-preview-tbody');
+    if (preview) {
+      if (!betaSitesCache.length) {
+        preview.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:1.5rem;">No beta sites yet.</td></tr>`;
+      } else {
+        preview.innerHTML = betaSitesCache.map((site) => {
+          const progress = Math.max(0, Math.min(100, Number(site.healthScore) || 0));
+          return `
+            <tr>
+              <td><strong>${esc(site.name)}</strong></td>
+              <td>${esc(site.location)}</td>
+              <td>${statusBadge(site.status)}</td>
+              <td><div class="health-score"><div class="health-circle ${healthClass(site.healthScore)}">${esc(site.healthScore)}</div></div></td>
+              <td>${fmtDate(site.goLiveDate)}</td>
+              <td>${Number(site.activeUsers || 0).toLocaleString()}</td>
+              <td>${Number(site.casesProcessed || 0).toLocaleString()}</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:${progress}%;"></div></div></td>
+            </tr>`;
+        }).join('');
+      }
+    }
     if (!tbody) return;
     if (!betaSitesCache.length) {
       tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:2rem;">No beta sites yet. Use “Add Site” to create one.</td></tr>`;
