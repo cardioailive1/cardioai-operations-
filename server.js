@@ -14,6 +14,7 @@
 require('dotenv').config();
 
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
@@ -343,7 +344,22 @@ app.use('/api', apiRouter);
 // ---------------------------------------------------------------------------
 app.get('/login', (req, res) => {
   if (req.isAuthenticated && req.isAuthenticated()) return res.redirect('/');
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  const loginFile = path.join(__dirname, 'public', 'login.html');
+  if (fs.existsSync(loginFile)) return res.sendFile(loginFile);
+  // Fallback: serve a minimal sign-in page if public/login.html is missing,
+  // so authentication still works even if the file wasn't deployed.
+  res.type('html').send(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign in · Cardio AI Operations</title>
+    <style>body{font-family:system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;
+    justify-content:center;margin:0;background:linear-gradient(135deg,#0A1929,#132F4C);color:#E8F1F5}
+    .card{background:#1A2F47;border:1px solid #2A4A65;border-radius:16px;padding:2.5rem;text-align:center;max-width:380px}
+    h1{font-size:1.4rem;margin:0 0 .5rem}p{color:#9DB4C7;margin:0 0 1.5rem}
+    a{display:inline-block;background:#fff;color:#1f2937;text-decoration:none;font-weight:600;
+    padding:.85rem 1.5rem;border-radius:10px}</style></head>
+    <body><div class="card"><div style="font-size:2.5rem">🫀</div>
+    <h1>Cardio AI Operations</h1><p>Sign in with your company Google account.</p>
+    <a href="/auth/google">Sign in with Google</a></div></body></html>`);
 });
 
 app.get('/', ensureAuth, (req, res) => {
