@@ -38,3 +38,7 @@ services:
         sync: false
       - key: GOOGLE_CALLBACK_URL
         sync: false
+      - key: SALES_ENGINE_URL
+        sync: false
+      - key: INTEGRATION_API_KEY
+        sync: false
