@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in · Cardio AI Operations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy-900: #0A1929;
+      --navy-700: #132F4C;
+      --panel: #1A2F47;
+      --panel-2: #264159;
+      --border: #2A4A65;
+      --text: #E8F1F5;
+      --muted: #9DB4C7;
+      --accent: #2B7BC4;
+      --accent-2: #1E5A8E;
+      --danger: #E8584D;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(1200px 600px at 50% -10%, rgba(43,123,196,0.18), transparent 60%),
+        linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 100%);
+      color: var(--text);
+      padding: 1.5rem;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(135deg, var(--panel) 0%, var(--panel-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+      padding: 2.75rem 2.25rem 2.25rem;
+      text-align: center;
+    }
+    .mark {
+      width: 86px; height: 86px; margin: 0 auto 1.4rem;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.4rem;
+      box-shadow: 0 12px 30px rgba(30,90,142,0.45);
+      animation: beat 2.4s ease-in-out infinite;
+    }
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      8% { transform: scale(1.10); }
+      16% { transform: scale(1); }
+      24% { transform: scale(1.06); }
+      32% { transform: scale(1); }
+    }
+    h1 { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.01em; }
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.6rem;
+    }
+    .sub { color: var(--muted); font-size: 0.98rem; margin: 0.55rem 0 1.8rem; line-height: 1.5; }
+    .google-btn {
+      display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+      width: 100%; padding: 0.95rem 1.25rem;
+      background: #ffffff; color: #1f2937;
+      border: none; border-radius: 12px;
+      font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    }
+    .google-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,0.32); }
+    .google-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    .google-btn svg { width: 20px; height: 20px; }
+    .domain {
+      margin-top: 1.5rem; font-size: 0.82rem; color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .domain b { color: var(--text); font-weight: 600; }
+    .error {
+      margin-bottom: 1.25rem; padding: 0.8rem 1rem;
+      background: rgba(232,88,77,0.12); border: 1px solid rgba(232,88,77,0.4);
+      border-radius: 10px; color: #ffb4ae; font-size: 0.9rem; line-height: 1.45;
+      display: none;
+    }
+    .error.show { display: block; }
+    .foot { margin-top: 1.75rem; font-size: 0.78rem; color: var(--muted); }
+    @media (prefers-reduced-motion: reduce) { .mark { animation: none; } }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="mark" aria-hidden="true">🫀</div>
+    <div class="eyebrow">COO Command Center</div>
+    <h1>Cardio AI Operations</h1>
+    <p class="sub">Sign in with your company Google account to access the operations platform.</p>
+
+    <div id="error" class="error" role="alert"></div>
+
+    <a class="google-btn" href="/auth/google">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Sign in with Google
+    </a>
+
+    <p class="domain">Access limited to <b id="domain-label">your company domain</b></p>
+    <p class="foot">Cardio AI Corp · Internal use only</p>
+  </main>
+
+  <script>
+    // Surface OAuth errors passed back as ?error=
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const err = params.get('error');
+      if (!err) return;
+      const box = document.getElementById('error');
+      const messages = {
+        domain_not_allowed:
+          'That account is not on the approved company domain. Use your work Google account.',
+        sign_in_failed: 'Sign-in could not be completed. Please try again.',
+        access_denied: 'Sign-in was cancelled.',
+      };
+      box.textContent = messages[err] || 'Sign-in failed. Please try again.';
+      box.classList.add('show');
+    })();
+  </script>
+</body>
+</html>
