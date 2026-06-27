@@ -209,6 +209,26 @@ app.get('/healthz', (req, res) =>
   res.json({ ok: true, env: NODE_ENV, store: store.driver })
 );
 
+// Diagnostic: shows exactly what files the server can see on disk.
+// Safe to expose — it lists filenames only, no contents. Remove later if you like.
+app.get('/__debug', (req, res) => {
+  const root = __dirname;
+  const pub = path.join(__dirname, 'public');
+  const safeList = (dir) => {
+    try { return fs.readdirSync(dir); } catch (e) { return 'ERROR: ' + e.message; }
+  };
+  res.json({
+    __dirname: root,
+    cwd: process.cwd(),
+    rootContents: safeList(root),
+    publicExists: fs.existsSync(pub),
+    publicContents: safeList(pub),
+    indexExists: fs.existsSync(path.join(pub, 'index.html')),
+    loginExists: fs.existsSync(path.join(pub, 'login.html')),
+    appJsExists: fs.existsSync(path.join(pub, 'app.js')),
+  });
+});
+
 // ---------------------------------------------------------------------------
 // REST API (all protected). Generic collections + computed dashboard.
 // ---------------------------------------------------------------------------
@@ -403,6 +423,13 @@ store
           (ALLOWED_EMAILS.length ? ` + ${ALLOWED_EMAILS.length} explicit email(s)` : '')
       );
       console.log(`  OAuth ready   ${Boolean(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET)}\n`);
+      try {
+        const pub = path.join(__dirname, 'public');
+        console.log(`  __dirname     ${__dirname}`);
+        console.log(`  public/ has   ${fs.existsSync(pub) ? fs.readdirSync(pub).join(', ') : '(public folder MISSING)'}\n`);
+      } catch (e) {
+        console.log('  [file-check] ' + e.message + '\n');
+      }
     });
   })
   .catch((err) => {
