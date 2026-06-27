@@ -13,16 +13,22 @@ service — the same pattern as the Sales Automation Engine.
 cardioai-operations/
 ├── server.js            # Express backend: Google OAuth + REST API + static serving
 ├── storage.js           # Data layer: Postgres (prod) or JSON file (local dev)
+├── salesConnector.js    # Live-pulls + maps the Sales Engine pipeline into deals
 ├── seed.json            # Initial data (your real beta sites, team, pipeline, etc.)
 ├── package.json         # Dependencies + start script
 ├── render.yaml          # One-click Render Blueprint (web service + Postgres)
 ├── .env.example         # Environment variable template
 ├── .gitignore
+├── SALES_ENGINE_pipeline_endpoint.js   # Drop-in endpoint to paste into the SALES ENGINE's server.js
 └── public/
     ├── index.html       # The full operations dashboard (passcode removed)
     ├── login.html       # Google sign-in page (shown to signed-out users)
     └── app.js           # Frontend runtime: user chip, logout, live data, beta-site CRUD
 ```
+
+> **Note:** `SALES_ENGINE_pipeline_endpoint.js` is not part of this app — it's a
+> snippet you paste into the **sales engine's** `server.js`. See *Sales Engine
+> integration* below.
 
 ---
 
@@ -117,6 +123,8 @@ Then add the environment variables below.
 | `GOOGLE_CALLBACK_URL` | `https://YOUR-APP.onrender.com/auth/google/callback` |
 | `ALLOWED_EMAIL_DOMAIN` | `cardioailive.com` |
 | `ALLOWED_EMAILS` | (optional) extra emails, comma-separated |
+| `SALES_ENGINE_URL` | (optional) sales engine URL, e.g. `https://your-sales-engine.onrender.com` — enables live pipeline pull |
+| `INTEGRATION_API_KEY` | (optional) shared secret; must match the value set on the sales engine |
 
 After the first deploy, copy your live Render URL and add its
 `/auth/google/callback` to the Authorized redirect URIs in Google Console.
@@ -228,6 +236,49 @@ stay fully editable.
 4. Redeploy. Open the Sales Pipeline tab — engine deals appear with the badge.
 
 The secret only ever lives in server environments; it never reaches the browser.
+
+### Configuration reference
+
+Environment variables — set on **both** services, with the **same** `INTEGRATION_API_KEY`:
+
+| Service | Variable | Value |
+|---|---|---|
+| Ops platform | `SALES_ENGINE_URL` | the sales engine's public URL (no trailing slash needed) |
+| Ops platform | `INTEGRATION_API_KEY` | shared secret (32+ random chars) |
+| Sales engine | `INTEGRATION_API_KEY` | the **same** shared secret |
+
+If either var is unset on the ops platform, the integration simply stays off and
+the Pipeline shows only your manually-entered deals — no errors.
+
+**Endpoint contract** (what the sales engine must expose):
+
+```
+GET /api/integrations/pipeline
+Header:  x-api-key: <INTEGRATION_API_KEY>
+200 ->   { "deals": [ ... ], "count": N }   (a bare array also works)
+401 ->   wrong/missing key
+```
+
+**Field mapping** (sales engine record → ops platform deal). The connector
+(`salesConnector.js`) is tolerant of several field names:
+
+| Ops deal field | Pulled from (first match wins) |
+|---|---|
+| `account` | `account` · `company` · `organization` · `name` |
+| `contact` | `contact` · `contactName` · `champion` · `poc` |
+| `stage` | `stage` · `status` (Prospecting→discovery, Qualification, Proposal, Negotiation/Closing→negotiation, Closed Won/Lost) |
+| `value` | `value` · `amount` · `dealValue` · `dealSize` (parses `$540K`, `1.2M`, `880000`) |
+| `probability` | `probability` · `winProbability` |
+| `owner` | `owner` · `rep` · `assignedTo` · `salesRep` |
+| `nextAction` | `nextAction` · `nextStep` · `next` |
+
+Every pulled deal is tagged `source: "sales-engine"` and given an `se_`-prefixed
+id so it renders read-only. Cache TTL is 60s (edit `CACHE_MS` in
+`salesConnector.js` to change it).
+
+**Tuning the engine side:** in `SALES_ENGINE_pipeline_endpoint.js`, the line
+marked `ADJUST` assumes the engine keeps deals in `db.leads` or `db.deals`. Point
+it at the engine's actual data source (e.g. a Postgres query) if different.
 
 ## API reference
 
