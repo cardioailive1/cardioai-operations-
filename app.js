@@ -506,12 +506,13 @@
   function dealRow(d) {
     const stage = STAGE_LABELS[d.stage] || d.stage || '';
     const prob = d.probability != null ? d.probability + '%' : '—';
-    const fromEngine = d.source === 'sales-engine';
-    const badge = fromEngine
-      ? ' <span title="Synced live from the Sales Engine" style="font-size:0.65rem;background:rgba(43,123,196,0.18);color:#7fb3e0;border:1px solid rgba(43,123,196,0.4);border-radius:4px;padding:0.05rem 0.35rem;vertical-align:middle;">⚡ Sales Engine</span>'
+    const synced = d.readOnly === true || !!d.sourceLabel || (typeof d.id === 'string' && d.id.indexOf('se_') === 0);
+    const label = d.sourceLabel || d.source || 'Sales Engine';
+    const badge = synced
+      ? ` <span title="Synced live from ${esc(label)}" style="font-size:0.65rem;background:rgba(43,123,196,0.18);color:#7fb3e0;border:1px solid rgba(43,123,196,0.4);border-radius:4px;padding:0.05rem 0.35rem;vertical-align:middle;text-transform:capitalize;">⚡ ${esc(label)}</span>`
       : '';
-    const action = fromEngine
-      ? '<span style="color:var(--text-muted);font-size:0.8rem;" title="Managed in the Sales Engine">🔒</span>'
+    const action = synced
+      ? '<span style="color:var(--text-muted);font-size:0.8rem;" title="Managed in the source system">🔒</span>'
       : `<button class="dl-remove" data-id="${esc(d.id)}" title="Remove"
             style="background:rgba(232,57,70,0.15);color:#ff8a80;border:1px solid rgba(232,57,70,0.4);border-radius:6px;padding:0.3rem 0.6rem;cursor:pointer;font-size:0.8rem;">✕</button>`;
     return `
