@@ -123,8 +123,9 @@ Then add the environment variables below.
 | `GOOGLE_CALLBACK_URL` | `https://YOUR-APP.onrender.com/auth/google/callback` |
 | `ALLOWED_EMAIL_DOMAIN` | `cardioailive.com` |
 | `ALLOWED_EMAILS` | (optional) extra emails, comma-separated |
-| `SALES_ENGINE_URL` | (optional) sales engine URL, e.g. `https://your-sales-engine.onrender.com` — enables live pipeline pull |
-| `INTEGRATION_API_KEY` | (optional) shared secret; must match the value set on the sales engine |
+| `SALES_ENGINE_URL` | (optional) single pipeline source URL — see *Pipeline integration* |
+| `PIPELINE_SOURCES` | (optional) multi-source pipeline, e.g. `sales=https://…,crm=https://…` |
+| `INTEGRATION_API_KEY` | (optional) shared secret; must match the value set on each pipeline source |
 
 After the first deploy, copy your live Render URL and add its
 `/auth/google/callback` to the Authorized redirect URIs in Google Console.
@@ -206,79 +207,129 @@ restart the service.
 
 ---
 
-## Sales Engine integration (live pipeline)
+## Pipeline integration (live, multi-source)
 
-The Sales Pipeline tab can live-pull deals from the **Cardio AI Sales Automation
-Engine** and show them alongside any deals you add by hand.
+The Sales Pipeline tab live-pulls deals from **one or more** upstream
+services — the Cardio AI **Sales platform**, the **CRM**, or both — and shows
+them merged with any deals you enter directly in the hub.
 
-**How it works:** the ops platform calls a read-only endpoint on the sales engine
+**How it works:** the hub calls each source's read-only endpoint
 (`GET /api/integrations/pipeline`) server-to-server, authenticated with a shared
-secret, maps each record into a deal, and merges it into `/api/deals` and the
-dashboard pipeline value. Results are cached for 60 seconds. If the engine is
-asleep or unreachable, the last cached pipeline (or just your manual deals) is
-served — the platform never breaks. Sales-engine deals show a "⚡ Sales Engine"
-badge and are read-only here (manage them in the engine); deals you add by hand
-stay fully editable.
+secret, maps every record into a deal, and merges them into `/api/deals` and the
+dashboard pipeline value. Each source is cached ~60s. If a source is asleep or
+unreachable it serves that source's last good data (or empty) and the others
+keep working — the hub never breaks. Pulled deals show a "⚡ <source>" badge and
+are read-only here (manage them in the source system); deals you add by hand stay
+fully editable. The shared secret only ever lives in server environments; it
+never reaches the browser.
 
-**Setup (two sides, same key):**
+**Setup:**
 
-1. Generate a shared secret:
+1. Generate one shared secret (used everywhere):
    ```bash
    node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
    ```
-2. **On the sales engine** — paste the block from
-   `SALES_ENGINE_pipeline_endpoint.js` into its `server.js` (with the other
-   routes), adjust the one marked line to point at its deals/leads data, and set
-   `INTEGRATION_API_KEY` in its Render environment.
-3. **On this ops platform** — set in Render:
-   - `SALES_ENGINE_URL` = the engine's URL (e.g. `https://your-sales-engine.onrender.com`)
-   - `INTEGRATION_API_KEY` = the *same* secret as the engine
-4. Redeploy. Open the Sales Pipeline tab — engine deals appear with the badge.
+2. **On each source** (sales platform, CRM) — expose the endpoint and set
+   `INTEGRATION_API_KEY` to that secret. (Paste the block from
+   `SALES_ENGINE_pipeline_endpoint.js` into the source's `server.js`, pointing
+   it at that service's deals data.)
+3. **On this hub** (Render → Environment) — set:
+   ```
+   PIPELINE_SOURCES = sales=https://cardioai-sales-platform.onrender.com,crm=https://cardio-ai-crm.onrender.com
+   INTEGRATION_API_KEY = <the same shared secret>
+   ```
+   Format is a comma-separated list of `name=url` (the `name` is just a label
+   used for badges and ids; a bare `url` also works).
+4. Redeploy the hub. The Sales Pipeline tab and dashboard now show deals from
+   every source, merged with manual deals.
 
-The secret only ever lives in server environments; it never reaches the browser.
+**Single-source / back-compat:** if `PIPELINE_SOURCES` is unset, the connector
+falls back to a single `SALES_ENGINE_URL`. `PIPELINE_SOURCES` takes precedence
+when both are set. If neither is set, the integration simply stays off and the
+Pipeline shows only manual deals — no errors.
+
+### Avoid double-counting
+
+The hub pulls each upstream **directly**, so each source should export only its
+**own** deals:
+
+- On the **CRM**, keep `INTEGRATION_EXPORT_EXTERNAL = false` (default) — it
+  exports only its own deals, while the sales-platform deals reach the hub
+  straight from the sales platform. Each deal counted once.
+- If you instead switch the CRM into aggregate mode
+  (`INTEGRATION_EXPORT_EXTERNAL = true`), do **not** also list the sales platform
+  as a separate hub source. Pick one topology, not both.
 
 ### Configuration reference
 
-Environment variables — set on **both** services, with the **same** `INTEGRATION_API_KEY`:
-
-| Service | Variable | Value |
+| Where | Variable | Value |
 |---|---|---|
-| Ops platform | `SALES_ENGINE_URL` | the sales engine's public URL (no trailing slash needed) |
-| Ops platform | `INTEGRATION_API_KEY` | shared secret (32+ random chars) |
-| Sales engine | `INTEGRATION_API_KEY` | the **same** shared secret |
+| Hub | `PIPELINE_SOURCES` | comma-separated `name=url` list of sources |
+| Hub | `INTEGRATION_API_KEY` | shared secret (32+ random chars) |
+| Hub | `SALES_ENGINE_URL` | (optional) single-source fallback if `PIPELINE_SOURCES` unset |
+| Hub | `INTEGRATION_CACHE_MS` | (optional) per-source cache TTL, default `60000` |
+| Hub | `INTEGRATION_TIMEOUT_MS` | (optional) per-source fetch timeout, default `8000` |
+| Each source | `INTEGRATION_API_KEY` | the **same** shared secret |
 
-If either var is unset on the ops platform, the integration simply stays off and
-the Pipeline shows only your manually-entered deals — no errors.
-
-**Endpoint contract** (what the sales engine must expose):
+**Endpoint contract** (what each source must expose):
 
 ```
 GET /api/integrations/pipeline
 Header:  x-api-key: <INTEGRATION_API_KEY>
-200 ->   { "deals": [ ... ], "count": N }   (a bare array also works)
+200 ->   { "deals": [ ... ] }   (also accepts pipeline|leads|data, or a bare array)
 401 ->   wrong/missing key
 ```
 
-**Field mapping** (sales engine record → ops platform deal). The connector
+**Field mapping** (source record → hub deal). The connector
 (`salesConnector.js`) is tolerant of several field names:
 
-| Ops deal field | Pulled from (first match wins) |
+| Hub deal field | Pulled from (first match wins) |
 |---|---|
 | `account` | `account` · `company` · `organization` · `name` |
 | `contact` | `contact` · `contactName` · `champion` · `poc` |
-| `stage` | `stage` · `status` (Prospecting→discovery, Qualification, Proposal, Negotiation/Closing→negotiation, Closed Won/Lost) |
+| `stage` | `stage` · `status` (Prospecting/Lead→discovery, Demo/POC/Pilot→qualification, Proposal, Closing/Negotiation→negotiation, Closed Won/Lost) |
 | `value` | `value` · `amount` · `dealValue` · `dealSize` (parses `$540K`, `1.2M`, `880000`) |
 | `probability` | `probability` · `winProbability` |
 | `owner` | `owner` · `rep` · `assignedTo` · `salesRep` |
 | `nextAction` | `nextAction` · `nextStep` · `next` |
 
-Every pulled deal is tagged `source: "sales-engine"` and given an `se_`-prefixed
-id so it renders read-only. Cache TTL is 60s (edit `CACHE_MS` in
-`salesConnector.js` to change it).
+Every pulled deal is tagged with its `source` and given an `se_<source>_<id>`
+id so it renders read-only and ids never collide across sources.
 
-**Tuning the engine side:** in `SALES_ENGINE_pipeline_endpoint.js`, the line
-marked `ADJUST` assumes the engine keeps deals in `db.leads` or `db.deals`. Point
-it at the engine's actual data source (e.g. a Postgres query) if different.
+### Source health endpoint
+
+`GET /api/integrations/sources` (signed-in session) shows each feed's live status:
+
+```json
+{
+  "sources": [
+    { "name": "sales", "url": "...", "ok": true,  "count": 12, "lastFetch": "...", "ageSeconds": 4, "error": null },
+    { "name": "crm",   "url": "...", "ok": false, "count": 0,  "lastFetch": null,  "ageSeconds": null, "error": "fetch failed" }
+  ],
+  "totals": { "sources": 2, "live": 1, "deals": 12 }
+}
+```
+
+`ok` is `true` (last pull succeeded), `false` (failed — see `error`), or `null`
+(configured but not fetched yet). Handy for confirming both feeds are live and
+for spotting a sleeping free-tier service.
+
+### Verify
+
+```bash
+# Each source responds to the shared key:
+curl -H "x-api-key: $INTEGRATION_API_KEY" \
+  https://cardioai-sales-platform.onrender.com/api/integrations/pipeline
+curl -H "x-api-key: $INTEGRATION_API_KEY" \
+  https://cardio-ai-crm.onrender.com/api/integrations/pipeline
+
+# After redeploy, the hub's deals include both sources plus manual deals
+# (signed-in session), and the health view lists each feed:
+#   https://cardioai-operations-3ejs.onrender.com/api/integrations/sources
+```
+
+A source returning 404 on `/api/integrations/pipeline` simply hasn't exposed the
+endpoint yet — the other sources still work.
 
 ## API reference
 
