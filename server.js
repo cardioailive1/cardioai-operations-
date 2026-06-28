@@ -24,7 +24,7 @@ const compression = require('compression');
 const morgan = require('morgan');
 
 const { createStore } = require('./storage');
-const { fetchSalesPipeline } = require('./salesConnector');
+const { fetchSalesPipeline, sourcesStatus } = require('./salesConnector');
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -354,6 +354,20 @@ apiRouter.get('/dashboard', wrap(async (req, res) => {
     pipelineValue: deals.reduce((s, d) => s + (Number(d.value) || 0), 0),
     openPositions: positions.length,
     customers: customers.length,
+  });
+}));
+
+// Pipeline source health view — every configured source + last-pull status.
+apiRouter.get('/integrations/sources', wrap(async (req, res) => {
+  await fetchSalesPipeline(); // refresh (respects the cache)
+  const sources = sourcesStatus();
+  res.json({
+    sources,
+    totals: {
+      sources: sources.length,
+      live: sources.filter((s) => s.ok === true).length,
+      deals: sources.reduce((a, s) => a + (s.count || 0), 0),
+    },
   });
 }));
 
